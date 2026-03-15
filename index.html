@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XYC365 STUDIOS - 11岁极客的技术空间</title>
+    <style>
+        /* 全局重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Consolas", "Microsoft YaHei", monospace;
+        }
+
+        /* 紫渐变科技风变量 */
+        :root {
+            --purple-light: #c06c84;    /* 浅紫 */
+            --purple-main: #6c5ce7;     /* 主紫 */
+            --purple-dark: #2d3436;     /* 深紫黑 */
+            --purple-glow: #a29bfe;     /* 发光紫 */
+            --bg-gradient: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: #f1f1f1;
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.8;
+            /* 背景微光效果 */
+            background-size: 400% 400%;
+            animation: gradient-bg 15s ease infinite;
+        }
+
+        /* 背景渐变动画 */
+        @keyframes gradient-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+            border: 1px solid rgba(162, 155, 254, 0.2);
+            border-radius: 12px;
+            background: rgba(10, 12, 28, 0.6);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.15);
+        }
+
+        /* 标题样式 */
+        h1 {
+            /* 紫渐变文字 */
+            background: linear-gradient(90deg, var(--purple-light), var(--purple-glow), var(--purple-main));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid rgba(162, 155, 254, 0.3);
+            padding-bottom: 15px;
+            position: relative;
+        }
+
+        /* 标题小装饰 */
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 2px;
+            background: var(--purple-glow);
+            box-shadow: 0 0 10px var(--purple-glow);
+        }
+
+        h2 {
+            color: var(--purple-glow);
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 小标题图标 */
+        h2::before {
+            content: "▶";
+            color: var(--purple-light);
+            animation: blink 1.5s infinite;
+        }
+
+        /* 闪烁动画 */
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 普通文字 */
+        p {
+            color: #dcdde1;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        /* UP主信息高亮 */
+        .up {
+            color: var(--purple-glow);
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(162, 155, 254, 0.4);
+        }
+
+        /* 工具标签 */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .tag {
+            padding: 8px 15px;
+            border-radius: 8px;
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.2), rgba(192, 108, 132, 0.2));
+            border: 1px solid rgba(162, 155, 254, 0.3);
+            color: #f1f1f1;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        /* 标签hover效果 */
+        .tag:hover {
+            transform: translateY(-3px);
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.3), rgba(192, 108, 132, 0.3));
+            box-shadow: 0 0 12px rgba(162, 155, 254, 0.4);
+        }
+
+        /* 列表样式 */
+        ul {
+            color: #dcdde1;
+            margin-left: 30px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        /* 列表项装饰 */
+        li::before {
+            content: "";
+            position: absolute;
+            left: -15px;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--purple-glow);
+            box-shadow: 0 0 6px var(--purple-glow);
+        }
+
+        /* 页脚签名 */
+        .signature {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(162, 155, 254, 0.2);
+            color: #a29bfe;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 标题 -->
+        <h1>XYC365 STUDIOS</h1>
+        <p>11岁极客的技术实验空间 | 逆向 · 安全 · AI · 系统</p>
+
+        <!-- 关于我 -->
+        <h2>🧠 关于开发者</h2>
+        <p>B站 UP 主：<span class="up">SYSTEM-WIN11-T-I</span></p>
+        <p>11岁，沉迷技术的小极客，喜欢折腾各种工具和底层技术～</p>
+
+        <!-- 常用工具 -->
+        <h2>⚙️ 常用工具栈</h2>
+        <div class="tag-container">
+            <div class="tag">x64dbg (调试)</div>
+            <div class="tag">Kali Linux (安全)</div>
+            <div class="tag">Burp Suite (渗透)</div>
+            <div class="tag">RetDec (反编译)</div>
+            <div class="tag">PyTorch (AI)</div>
+            <div class="tag">C++ / Python (编程)</div>
+            <div class="tag">Windows 底层 (折腾)</div>
+        </div>
+
+        <!-- 研究方向 -->
+        <h2>🚀 研究方向</h2>
+        <ul>
+            <li>软件逆向分析与调试技巧</li>
+            <li>网络安全基础与渗透测试</li>
+            <li>二进制文件反编译与分析</li>
+            <li>PyTorch 入门与AI模型尝试</li>
+            <li>Windows系统优化与权限研究</li>
+        </ul>
+
+        <!-- 关于本站 -->
+        <h2>📌 关于这个空间</h2>
+        <p>这里是我记录技术笔记、分享实验成果的小站，没有花里胡哨的内容，只有纯粹的技术探索～</p>
+        <p>保持好奇，保持折腾，技术没有年龄限制！</p>
+
+        <!-- 签名 -->
+        <div class="signature">
+            XYC365 STUDIOS © 2026 | BY SYSTEM-WIN11-T-I
+        </div>
+    </div>
+</body>
+</html>
