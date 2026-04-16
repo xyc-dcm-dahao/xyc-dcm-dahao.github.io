@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>微思宕创客中心人工智能大赛题库</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #f1f5f9;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 30px auto;
+            background: rgba(30, 41, 59, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #ffffff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(96, 165, 250, 0.3);
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            font-size: 16px;
+            color: #cbd5e1;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stats div {
+            padding: 5px 10px;
+        }
+
+        .stats span {
+            color: #60a5fa;
+            font-weight: 600;
+        }
+
+        .question-box {
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+            background: rgba(51, 65, 85, 0.4);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .q-title {
+            font-size: 20px;
+            margin-bottom: 25px;
+            line-height: 1.7;
+            color: #f1f5f9;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 16px 20px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #e2e8f0;
+            background: rgba(71, 85, 105, 0.2);
+        }
+
+        .option:hover {
+            background: rgba(96, 165, 250, 0.15);
+            border-color: #60a5fa;
+            transform: translateX(4px);
+        }
+
+        .option.selected {
+            background: rgba(96, 165, 250, 0.25);
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.3);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .result.correct {
+            background: rgba(134, 239, 172, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+        }
+
+        .result.wrong {
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+        }
+
+        .analysis {
+            margin-top: 15px;
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 10px;
+            line-height: 1.7;
+            color: #cbd5e1;
+            border-left: 3px solid #a78bfa;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            opacity: 0.6;
+            transform: none;
+            box-shadow: none;
+        }
+
+        button#wrong-btn {
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+        }
+
+        .wrong-list {
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .wrong-list h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+        }
+
+        .wrong-item {
+            padding: 20px;
+            border-left: 4px solid #f87171;
+            background: rgba(15, 23, 42, 0.5);
+            margin-bottom: 15px;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .wrong-q {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+            font-size: 17px;
+        }
+
+        .wrong-ans {
+            color: #f87171;
+            font-weight: 600;
+        }
+
+        .wrong-correct {
+            color: #4ade80;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="title">微思宕创客中心人工智能大赛题库</div>
+
+        <div class="stats">
+            <div>当前题号：<span id="current-num">1</span>/100</div>
+            <div>已答题：<span id="answered">0</span></div>
+            <div>正确：<span id="correct">0</span></div>
+            <div>错误：<span id="wrong">0</span></div>
+        </div>
+
+        <div class="question-box">
+            <div class="q-title" id="question"></div>
+            <div class="options" id="options"></div>
+            <div class="result" id="result" style="display: none;"></div>
+            <div class="analysis" id="analysis" style="display: none;"></div>
+        </div>
+
+        <div class="btn-group">
+            <button id="submit-btn">提交答案</button>
+            <button id="next-btn" disabled>下一题</button>
+            <button id="wrong-btn">查看错题</button>
+        </div>
+
+        <div class="wrong-list" id="wrong-list" style="display: none;">
+            <h3>错题记录</h3>
+            <div id="wrong-items"></div>
+        </div>
+    </div>
+
+    <script>
+        // 100道完整题库
+        const questions = [
+            {
+                q: "1.我国历史记载第一次提出“智能”的书籍是（）？",
+                options: ["A.《资治通鉴》", "B.《汉书·高帝纪下》", "C.《黄帝内经》", "D.《竹书纪年》"],
+                answer: "B",
+                analysis: "《汉书·高帝纪下》记载了汉高祖刘邦时期的历史事件，其中明确提到“智能”一词，原文载：“盖闻聪明神武，有智能者。”此处“智能”指智慧和才能，是我国现存文献中对该词较早的记录。"
+            },
+            {
+                q: "2.人工智能这以概念是在何时、何地提出的？",
+                options: ["A.1956年夏季，美国", "B.1956年夏季，德国", "C.1957年秋季，美国", "D.1956年秋季，德国"],
+                answer: "A",
+                analysis: "人工智能概念的提出源于1956年夏季在美国达特茅斯学院召开的学术会议，该会议由约翰·麦卡锡等科学家组织，首次将“人工智能”确立为研究领域。"
+            },
+            {
+                q: "3.下列选项中，不属于人工智能定义的是？",
+                options: ["A.智能机器延伸", "B.增强人类改造自然", "C.治理社会能力", "D.改造人类"],
+                answer: "D",
+                analysis: "人工智能领域通常关注于技术对人类活动的辅助与扩展。选项D“改造人类”指向人类自身生理或认知结构的改变，属于生物技术或医学领域，与人工智能定义无直接关联。"
+            },
+            {
+                q: "4.1947年，（）被誉为“人工智能之父”。",
+                options: ["A.艾伦·图灵", "B.罗切斯特", "C.赫伯特·西蒙", "D.艾伦·纽厄尔"],
+                answer: "A",
+                analysis: "图灵在计算机科学和人工智能领域作出开创性贡献，其理论框架为现代AI奠定基础。1947年正值其系统探索“机器能否思考”问题的早期阶段，后于1950年发表《计算机器与智能》提出图灵测试。"
+            },
+            {
+                q: "5.人工智能对话程序ELIZA在（）开发出来。",
+                options: ["A.1966-1968年", "B.1962-1964年", "C.1964-1966年", "D.1960-1962年"],
+                answer: "C",
+                analysis: "ELIZA是约瑟夫·魏岑鲍姆在麻省理工学院开发的早期自然语言处理程序。公开资料显示其开发时间为1964至1966年。"
+            },
+            {
+                q: "6.第一个真正意义上的聊天机器人是叫（）？",
+                options: ["A.D.U.D.E", "B.ELIZA", "C.PARRY", "D.A.L.I.C.E"],
+                answer: "B",
+                analysis: "ELIZA由约瑟夫·魏泽鲍姆于1966年开发，最早模拟心理治疗师对话，通过关键词匹配生成回应，奠定了聊天机器人的基础。"
+            },
+            {
+                q: "7.人工智能经过几起几落？",
+                options: ["A.3,2", "B.4,3", "C.2,1", "D.5,4"],
+                answer: "A",
+                analysis: "人工智能发展历史上经历了三起两落的发展周期。"
+            },
+            {
+                q: "8.（）是一种测试机器是不是具备人类智能的方法。",
+                options: ["A.智能测试", "B.感知测试", "C.思维测试", "D.图灵测试"],
+                answer: "D",
+                analysis: "图灵测试由英国数学家艾伦·图灵于1950年提出，其核心是判断机器能否通过自然语言对话让人类无法区分其与真实人类的差异。"
+            },
+            {
+                q: "9.下列选项中，不属于人工智能三要素的是？",
+                options: ["A.数据", "B.算法", "C.算力", "D.核算"],
+                answer: "D",
+                analysis: "人工智能领域的三要素通常指数据、算法、算力。选项D（核算）指向财务或管理领域概念，与人工智能技术要素无直接关联。"
+            },
+            {
+                q: "10.（）是对客观世界的符号化记录。",
+                options: ["A.算法", "B.数据", "C.算力", "D.思维"],
+                answer: "B",
+                analysis: "在信息科学中，数据指通过观察、测量或记录得到的原始素材，通常以符号形式存在。题干中的“符号化记录”描述了数据的基本属性。"
+            },
+            {
+                q: "11.下列选择中，不属于人工智能大数据的特征有？",
+                options: ["A.数据体量大", "B.数据种类多", "C.数据真实性", "D.数据价值密度低", "E.数据产生和处理速度快"],
+                answer: "C",
+                analysis: "人工智能大数据通常以“4V”特征为核心：Volume（体量大）、Variety（种类多）、Velocity（产生处理快）、Value（价值密度低）。"
+            },
+            {
+                q: "12.下列选项中，不属于人工智能芯片的是？",
+                options: ["A.以CPU为代表的通用芯片", "B.以FPGA为代表的半定制化芯片", "C.以FPGA为代表的半定制化类脑芯片", "D.ASIC定制化专用芯片", "E.类脑芯片"],
+                answer: "C",
+                analysis: "人工智能芯片主要分为通用芯片（CPU/GPU）、半定制化芯片（FPGA）、全定制化芯片（ASIC）及类脑芯片。FPGA与类脑芯片原理不同，不能混为一谈。"
+            },
+            {
+                q: "13.（）被称为人工智能的核心？",
+                options: ["A.算法", "B.数据", "C.算力", "D.思维"],
+                answer: "A",
+                analysis: "算法在AI中负责处理数据、优化模型及实现目标的关键流程，直接影响系统性能与效果，是人工智能的核心。"
+            },
+            {
+                q: "14.被称为全球首个深度学习专用处理器芯片是？",
+                options: ["A.Ascend 910", "B.龙芯一号", "C.寒武纪", "D.麒麟芯片"],
+                answer: "C",
+                analysis: "寒武纪科技于2016年发布的Cambricon-1A被业界公认为全球首个专门针对深度学习算法设计的处理器架构。"
+            },
+            {
+                q: "15.全球首个深度学习专用处理器芯片是在什么时候研发的？",
+                options: ["A.2014年", "B.2016年", "C.2015年", "D.2017年"],
+                answer: "B",
+                analysis: "全球首个深度学习专用处理器芯片寒武纪1A于2016年正式发布。"
+            },
+            {
+                q: "16.目前世界上最大的图像识别数据库是？",
+                options: ["A.WordNet", "B.AI-lab", "C.ML-Images", "D.ImageNet"],
+                answer: "D",
+                analysis: "ImageNet由李飞飞团队于2009年创建，包含超过1400万人工标注图像，是目前世界上最大的图像识别数据库。"
+            },
+            {
+                q: "17.“人工智能”这个概念至今诞生了多少年？",
+                options: ["A.40多年", "B.50多年", "C.60多年", "D.70多年"],
+                answer: "C",
+                analysis: "人工智能概念诞生于1956年的达特茅斯会议，至今已60多年。"
+            },
+            {
+                q: "18.20世纪40年代，一位科幻作家在他的科幻作品《我，机器人》中提出了“机器人有几大准则”？",
+                options: ["A.2", "B.3", "C.4", "D.5"],
+                answer: "B",
+                analysis: "阿西莫夫在《我，机器人》中提出了机器人三大准则。"
+            },
+            {
+                q: "19.人主要是通过（）认识世界。",
+                options: ["A.嗅觉", "B.触觉", "C.视觉", "D.听觉", "E.味觉"],
+                answer: "C",
+                analysis: "人类感知外部环境时，视觉占据主导地位，约80%的外界信息通过视觉获取。"
+            },
+            {
+                q: "20.图像识别过程示意图，下列选项正确的是？",
+                options: ["A.图像输入→图像预处理→图像分割→图像特征提取→图像分类→输出", "B.图像输入→图像分割→图像预处理→图像特征提取→图像分类→输出", "C.图像输入→图像分割→图像分类→图像预处理→图像特征提取→输出", "D.图像输入→图像预处理→图像分割→图像分类→图像特征提取→输出"],
+                answer: "A",
+                analysis: "图像识别标准流程：图像输入→图像预处理→图像分割→图像特征提取→图像分类→输出。"
+            },
+            {
+                q: "21.下列选项中，不属于图像识别过程的有？",
+                options: ["A.图像预处理", "B.图像特征", "C.数字图像", "D.图像分类"],
+                answer: "C",
+                analysis: "数字图像是计算机中图像的表示方式，属于基础数据而非识别处理环节。"
+            },
+            {
+                q: "22.图像分割最常见的方法是？",
+                options: ["A.区域分割", "B.像素分割", "C.颜色分割", "D.阈值分割"],
+                answer: "D",
+                analysis: "阈值分割操作简单、计算高效，是图像分割最常见的基础方法。"
+            },
+            {
+                q: "23.下列选项中，不属于人工智能带来便利的是？",
+                options: ["A.提供服务，改善生活品质", "B.提高生产效率，创造更多财富", "C.挑战未知领域，探索广阔世界", "D.改造人类"],
+                answer: "D",
+                analysis: "人工智能的目的是辅助和增强人类能力，而非改造人类本体。"
+            },
+            {
+                q: "24.目前哪种智能设备已广泛应用在各类重要会议中。",
+                options: ["A.智能会议系统", "B.文字翻译系统", "C.音译系统", "D.文本系统"],
+                answer: "A",
+                analysis: "智能会议系统集成度高、功能全面，已广泛应用于各类重要会议。"
+            },
+            {
+                q: "25.机器的“耳朵”是？",
+                options: ["A.传声系统", "B.麦克风", "C.收音器", "D.微音系统"],
+                answer: "B",
+                analysis: "麦克风能接收声波并转换为电信号，是机器的“耳朵”。"
+            },
+            {
+                q: "26.关于语音识别的方法，下列选项正确的是？",
+                options: ["A.声音匹配法", "B.声波匹配法", "C.模板匹配法", "D.超声波匹配法"],
+                answer: "C",
+                analysis: "模板匹配法是语音识别的传统技术，通过将输入语音与预存模板对比实现识别。"
+            },
+            {
+                q: "27.语音识别识别方式的差异体现在哪里？",
+                options: ["A.声波模型", "B.声音模型", "C.超声波模型", "D.声学模型"],
+                answer: "D",
+                analysis: "声学模型专门用于捕捉语音信号中的声学特征，不同识别系统的主要区别在于声学模型的设计。"
+            },
+            {
+                q: "28.将输入的语音进行特征提取，具体是将声音信号按照很短的时间间隔（ms级别）切成一个个小段，称为（）。",
+                options: ["A.频率", "B.帧", "C.轴", "D.帕"],
+                answer: "B",
+                analysis: "语音信号处理中，分割后的短时段称为“帧”，通常以20-40毫秒为单位。"
+            },
+            {
+                q: "29.（）是自然语言理解的重要部分。",
+                options: ["A.语音识别", "B.特征提取", "C.语音解码和搜索", "D.语义分析"],
+                answer: "D",
+                analysis: "语义分析是确定句子或篇章含义的关键步骤，是自然语言理解的核心。"
+            },
+            {
+                q: "30.基于词典的分词方法是？",
+                options: ["A.正向最左匹配法", "B.正向最右匹配法", "C.正向最大匹配法", "D.正向最小匹配法"],
+                answer: "C",
+                analysis: "正向最大匹配法是基于词典分词的经典算法，优先匹配最长词条。"
+            },
+            {
+                q: "31.（）赋予机器说话的功能，既可以传递语义信息，也能模仿说话人的个性信息。",
+                options: ["A.语音转换技术", "B.语音合成技术", "C.语音识别", "D.语义分析"],
+                answer: "B",
+                analysis: "语音合成技术（TTS）将文本转化为可听语音，可模仿说话人音色、语调。"
+            },
+            {
+                q: "32.如何让机器学会“开口说话”？",
+                options: ["A.语音合成", "B.语音识别", "C.语义分析", "D.特征提取"],
+                answer: "A",
+                analysis: "语音合成技术将文本转化为语音信号，让机器具备发声能力。"
+            },
+            {
+                q: "33.深度学习算法的应用带来了一种新的语音合成法是？",
+                options: ["A.点到点语音合成", "B.参数合成法", "C.波形拼接发", "D.端到端语音合成"],
+                answer: "D",
+                analysis: "端到端语音合成通过神经网络直接建模文本到语音的映射关系，是深度学习带来的新技术。"
+            },
+            {
+                q: "34.下列选项中，能让机器学会认知客观世界的基础技术之一是？",
+                options: ["A.大数据存储技术", "B.文本录入", "C.知识图谱技术", "D.文本预处理"],
+                answer: "C",
+                analysis: "知识图谱通过结构化表示实体及其关系，是机器认知世界的基础技术。"
+            },
+            {
+                q: "35.“机器大脑”主要通过（）的属性特征来认识客观世界的事物。",
+                options: ["A.认知事物", "B.了解事物", "C.确定事物", "D.分析事物"],
+                answer: "D",
+                analysis: "机器通过算法对事物属性进行分解、计算、识别等分析过程来认识世界。"
+            },
+            {
+                q: "36.（）为机器“认识”客观世界构建了知识基础。",
+                options: ["A.关系", "B.认识", "C.特征", "D.属性"],
+                answer: "A",
+                analysis: "机器理解世界需依赖对事物间关联的抽象与建模，关系构建了知识基础。"
+            },
+            {
+                q: "37.下列选择中，属于“机器大脑”的知识库是？",
+                options: ["A.智能搜索", "B.大数据存储技术", "C.知识图谱", "D.分析事物"],
+                answer: "C",
+                analysis: "知识图谱通过实体、属性、关系的结构化方式组织信息，是机器的知识库。"
+            },
+            {
+                q: "38.下列选择中，不属于未来知识图谱将面临的挑战是？",
+                options: ["A.知识获取", "B.知识表示", "C.知识预处理", "D.知识融合"],
+                answer: "C",
+                analysis: "知识图谱核心挑战为知识获取、表示、融合，预处理属于基础数据环节。"
+            },
+            {
+                q: "39.下列选择中，哪个属于知识图谱构建与应用的基础？",
+                options: ["A.知识预处理", "B.知识获取", "C.知识应用", "D.知识表示"],
+                answer: "D",
+                analysis: "知识表示是将知识转化为计算机可处理形式的基础，支撑知识图谱全流程。"
+            },
+            {
+                q: "40.人脸识别智能检票系统使用的关键技术是什么？",
+                options: ["A.视觉系统", "B.图像系统", "C.图形提取", "D.图像处理"],
+                answer: "A",
+                analysis: "人脸识别属于计算机视觉技术应用，依赖视觉系统完成全流程处理。"
+            },
+            {
+                q: "41.人工智能虚拟主持人团队在什么时候登上央视网络春晚舞台？",
+                options: ["A.2016年", "B.2017年", "C.2018年", "D.2019年"],
+                answer: "D",
+                analysis: "2019年央视网络春晚首次引入AI虚拟主持人团队。"
+            },
+            {
+                q: "42.斯蒂芬·霍金通过会“说”的机器提供什么必要帮助，将他的科学思想传递给全世界？",
+                options: ["A.丧失语言功能", "B.全身瘫痪", "C.四肢不协调", "D.行动不便"],
+                answer: "A",
+                analysis: "霍金因ALS丧失语言能力，语音合成装置帮助他恢复交流能力。"
+            },
+            {
+                q: "43.要实现人机对话，就要通过对（）的技术处理，让机器学会“开口说话”。",
+                options: ["A.电信信号", "B.语音信号", "C.声波信号", "D.超声波信号"],
+                answer: "B",
+                analysis: "语音信号处理是实现人机对话、让机器发声的核心技术。"
+            },
+            {
+                q: "44.中国第一台无缆水下机器人是什么时候研制成功的？",
+                options: ["A.1992年", "B.1993年", "C.1994年", "D.1995年"],
+                answer: "C",
+                analysis: "中国第一台无缆水下机器人“探索号”于1994年研制成功。"
+            },
+            {
+                q: "45.1994年中科院沈阳研制成功的中国第一台无缆水下机器人叫什么？",
+                options: ["A.探索号", "B.航海号", "C.水母号", "D.海航号"],
+                answer: "A",
+                analysis: "我国首台无缆水下机器人由中科院沈阳自动化所研制，命名为探索号。"
+            },
+            {
+                q: "46.将人工智能技术与机器人相结合，由人工智能程序控制的机器人称为（）机器人。",
+                options: ["A.移动", "B.智能", "C.行动", "D.行走"],
+                answer: "B",
+                analysis: "融合AI技术、具备自主决策能力的机器人称为智能机器人。"
+            },
+            {
+                q: "47.下列选择中，关于智能机器人组成部分说法不正确的是？",
+                options: ["A.机械部分", "B.感知部分", "C.控制部分", "D.驱动部分", "E.交互部分", "F.智能操作部分"],
+                answer: "F",
+                analysis: "智能机器人标准组成：机械、感知、控制、驱动、交互部分，无智能操作部分。"
+            },
+            {
+                q: "48.智能机器人与传统机器人的区别在于智能机器人具有（）。",
+                options: ["A.自主语音识别能力", "B.自主图像识别能力", "C.自主学习能力", "D.自主知识图谱能力"],
+                answer: "C",
+                analysis: "自主学习能力是智能机器人与传统固定程序机器人的核心区别。"
+            },
+            {
+                q: "49.下列选择中，不属于智能机器人的交互方式有？",
+                options: ["A.情感表达", "B.文字表达", "C.语音", "D.面部特征"],
+                answer: "B",
+                analysis: "智能机器人交互以语音、视觉、情感为主，文字不属于典型智能交互方式。"
+            },
+            {
+                q: "50.无人驾驶汽车是智能交通运输工具的一种，也称为（）。",
+                options: ["A.滚式移动机器人", "B.驱动式移动机器让你", "C.行走式移动机器人", "D.轮式移动机器人"],
+                answer: "D",
+                analysis: "无人驾驶汽车采用车轮行驶，属于轮式移动机器人。"
+            },
+            {
+                q: "51.实现智能导航的核心是实现（）。",
+                options: ["A.自动避碰", "B.自动躲避", "C.自动退让", "D.自动躲让"],
+                answer: "A",
+                analysis: "自动避碰是智能导航确保安全行进的核心功能。"
+            },
+            {
+                q: "52.智能机器人的典型应用是？",
+                options: ["A.智能家居", "B.无人驾驶汽车", "C.智能会议系统", "D.智能搜索"],
+                answer: "B",
+                analysis: "无人驾驶汽车融合感知、决策、执行全能力，是智能机器人典型应用。"
+            },
+            {
+                q: "53.无人驾驶汽车是通过（）感知车辆周围环境等信息。",
+                options: ["A.视觉系统", "B.智能导航系统", "C.车载传感系统", "D.定位系统"],
+                answer: "C",
+                analysis: "无人驾驶依靠激光雷达、摄像头等车载传感系统综合感知环境。"
+            },
+            {
+                q: "54.机械手需要大量练习才能灵活工作，请问这种“练习”叫什么？",
+                options: ["A.优化学习", "B.强化学习", "C.训练学习", "D.动作学习"],
+                answer: "B",
+                analysis: "强化学习是智能体通过试错、奖励优化行为的学习方式，适用于机械臂训练。"
+            },
+            {
+                q: "55.无人驾驶汽车在哪一年，什么地方出现。",
+                options: ["A.2018年上海", "B.2018年北京", "C.2017年上海", "D.2017年北京"],
+                answer: "A",
+                analysis: "2018年上海率先发布智能网联汽车道路测试政策，实现无人驾驶规模化落地。"
+            },
+            {
+                q: "56.无人机和移动机器人的行动需要什么能量的维持？",
+                options: ["A.执行器", "B.电池", "C.齿轮", "D.导航"],
+                answer: "B",
+                analysis: "电池为无人机、移动机器人提供持续电能，是核心能量来源。"
+            },
+            {
+                q: "57.实现人机互动的基本方法是？",
+                options: ["A.输入", "B.输出", "C.编程", "D.计算"],
+                answer: "C",
+                analysis: "编程是创建交互逻辑、实现人机互动的底层基础方法。"
+            },
+            {
+                q: "58.（）是指一组操作指令或语句序列，是计算机执行算法的操作步骤。",
+                options: ["A.程序", "B.编程", "C.应用", "D.互动"],
+                answer: "A",
+                analysis: "程序是指令集合，是计算机执行算法、完成任务的具体载体。"
+            },
+            {
+                q: "59.据不完全统计，全世界有一定影响力的程序设计语言有多少种？",
+                options: ["A.400余种", "B.500余种", "C.600余种", "D.700余种"],
+                answer: "C",
+                analysis: "权威统计显示，全球具有一定影响力的程序设计语言约600余种。"
+            },
+            {
+                q: "60.通过调用语音识别（）就可以开发出能听懂人类语言的应用程序。",
+                options: ["A.Scratch", "B.API", "C.App Inventor", "D.C++"],
+                answer: "B",
+                analysis: "API（应用程序编程接口）可直接调用语音识别能力，快速开发应用。"
+            },
+            {
+                q: "61.API的中文全称是？",
+                options: ["A.应用程序编程接口", "B.应用程序编程输入", "C.应用程序编程输出", "D.应用程序编程预处理"],
+                answer: "A",
+                analysis: "API全称Application Programming Interface，中文为应用程序编程接口。"
+            },
+            {
+                q: "62.（）是指计算机解决实际问题的关键在于设计解决问题的步骤和方法。",
+                options: ["A.算力", "B.算法", "C.API", "D.编程"],
+                answer: "B",
+                analysis: "算法是解决问题的步骤与方法，是计算机求解问题的核心。"
+            },
+            {
+                q: "63.计算机对问题的求解是由（）来实现的。",
+                options: ["A.程序", "B.编程", "C.算法", "D.API"],
+                answer: "A",
+                analysis: "程序是算法的代码实现，计算机直接执行程序完成问题求解。"
+            },
+            {
+                q: "64.顺序结构，是按照什么顺序依次执行指令。",
+                options: ["A.从左到右", "B.从右到左", "C.从上到下", "D.从下到上"],
+                answer: "C",
+                analysis: "顺序结构指程序指令按照书写顺序，从上到下依次执行。"
+            },
+            {
+                q: "65.学习人工智能必须掌握的主要思维方式之一是？",
+                options: ["A.运用计算思维", "B.运用逻辑思维", "C.运用算法", "D.运用数据"],
+                answer: "A",
+                analysis: "计算思维是AI领域核心思维方式，用于分解、建模、解决复杂问题。"
+            },
+            {
+                q: "66.波士顿动力机器人Spot是什么时候，在哪里研制成功的？",
+                options: ["A.2014年美国", "B.2015美国", "C.2014年德国", "D.2015年美国"],
+                answer: "D",
+                analysis: "波士顿动力Spot机器人于2015年在美国研制成功。"
+            },
+            {
+                q: "67.“人工智能机器人是人工智能技术的综合实验场，可以全面地检验考察人工智能各个研究领域的技术发展状况。”--这是我国人工智能哪位专家提出的？",
+                options: ["A.钱学森", "B.钟南山", "C.李德毅", "D.李德志"],
+                answer: "C",
+                analysis: "该观点由中国工程院院士李德毅提出。"
+            },
+            {
+                q: "68.20世纪最先进的科学技术发明之一是？",
+                options: ["A.计算机", "B.高铁", "C.飞机", "D.手机"],
+                answer: "A",
+                analysis: "计算机的发明标志人类进入信息时代，是20世纪最核心科技发明。"
+            },
+            {
+                q: "69.下列选项中，被称为人工智能的基石是？",
+                options: ["A.数据", "B.算法", "C.算力", "D.逻辑"],
+                answer: "A",
+                analysis: "数据是AI模型训练的基础原材料，被称为人工智能的基石。"
+            },
+            {
+                q: "70.第一次工业革命的先行者是？",
+                options: ["A.德国", "B.英国", "C.美国", "D.中国"],
+                answer: "B",
+                analysis: "第一次工业革命起源于18世纪中后期的英国。"
+            },
+            {
+                q: "71.至今为止一共发生了几次工业革命？",
+                options: ["A.2", "B.3", "C.4", "D.5"],
+                answer: "C",
+                analysis: "人类历史共发生四次工业革命：蒸汽、电力、信息、智能。"
+            },
+            {
+                q: "72.“第四次工业革命”这一概念最早在哪里，什么时候正式提出？",
+                options: ["A.2013年德国", "B.2014年德国", "C.2013年英国", "D.2014年英国"],
+                answer: "A",
+                analysis: "第四次工业革命概念于2013年在德国工业4.0战略中正式提出。"
+            },
+            {
+                q: "73.第一次工业革命发生在哪里，在什么时候？",
+                options: ["A.18世纪60年年代-19世纪50年代，英国", "B.18世纪60年年代-19世纪50年代，德国", "C.18世纪60年年代-19世纪40年代，德国", "D.18世纪60年年代-19世纪40年代，英国"],
+                answer: "D",
+                analysis: "第一次工业革命：18世纪60年代-19世纪40年代，英国。"
+            },
+            {
+                q: "74.第二次工业革命的核心是哪两个国家？",
+                options: ["A.美国、英国", "B.美国、德国", "C.英国、德国", "D.英国、法国"],
+                answer: "B",
+                analysis: "第二次工业革命以美国、德国为核心国家。"
+            },
+            {
+                q: "75.计算机是在第几次工业革命出现的？",
+                options: ["A.1", "B.2", "C.3", "D.4"],
+                answer: "C",
+                analysis: "计算机是第三次工业革命（信息革命）的核心技术。"
+            },
+            {
+                q: "76.中国人工智能学会是在什么时候成立的？",
+                options: ["A.1980年", "B.1981年", "C.1982年", "D.1983年"],
+                answer: "A",
+                analysis: "中国人工智能学会成立于1980年。"
+            },
+            {
+                q: "77.我国人工智能领域首本学术刊物是？",
+                options: ["A.《人工智能应用》", "B.《人工智能历史》", "C.《人工智能学报》", "D.《人工智能教育》"],
+                answer: "C",
+                analysis: "《人工智能学报》是我国AI领域首本学术刊物。"
+            },
+            {
+                q: "78.我国人工智能领域第一本学术刊物是什么时候出版？",
+                options: ["A.1981年", "B.1982年", "C.1983年", "D.1984年"],
+                answer: "B",
+                analysis: "我国AI领域首本学术刊物于1982年正式出版。"
+            },
+            {
+                q: "79.我国第一本具有自主知识产权的《人工智能与应用》是哪个出版社出版？",
+                options: ["A.清华大学", "B.北京大学", "C.中国政法大学", "D.中国人民大学"],
+                answer: "A",
+                analysis: "《人工智能与应用》由清华大学出版社出版。"
+            },
+            {
+                q: "80.我国首部具有自主知识产权的《人工智能与应用》是在什么时候出版？",
+                options: ["A.1984年", "B.1985年", "C.1986年", "D.1987年"],
+                answer: "D",
+                analysis: "《人工智能与应用》于1987年出版。"
+            },
+            {
+                q: "81.哪个学校率先设立我国智能科学与技术本科专业？",
+                options: ["A.清华大学", "B.北京大学", "C.电子科技大学", "D.北京理工大学"],
+                answer: "B",
+                analysis: "北京大学于2003年率先设立智能科学与技术本科专业。"
+            },
+            {
+                q: "82.我国哪一年设立了智能科学与技术本科专业？",
+                options: ["A.2000年", "B.2001年", "C.2002年", "D.2003年"],
+                answer: "D",
+                analysis: "我国于2003年正式设立智能科学与技术本科专业。"
+            },
+            {
+                q: "83.国务院印发什么规划，将发展人工智能提升到了国家的战略层。",
+                options: ["A.《政府工作报告》", "B.《新一代人工智能发展规划》", "C.《人工智能及其应用》", "D.《人工智能教育》"],
+                answer: "B",
+                analysis: "国务院印发《新一代人工智能发展规划》，将AI上升为国家战略。"
+            },
+            {
+                q: "84.《新一代人工智能发展规划》是国务院在什么时候印发的？",
+                options: ["A.2017年3月", "B.2017年5月", "C.2017年7月", "D.2017年9月"],
+                answer: "C",
+                analysis: "《新一代人工智能发展规划》于2017年7月由国务院印发。"
+            },
+            {
+                q: "85.“计算机普及要从娃娃抓起”--这句话出自哪位领导？",
+                options: ["A.邓小平", "B.毛泽东", "C.江泽民", "D.周恩来"],
+                answer: "A",
+                analysis: "“计算机普及要从娃娃抓起”由邓小平同志提出。"
+            },
+            {
+                q: "86.1997年，清华大学出版社出版的科普教育丛书是？",
+                options: ["A.《信息科学与技术系列》", "B.《计算机与信息科学十万个为什么》", "C.《人工智能初步》", "D.《信息科学与技术十万个为什么》"],
+                answer: "B",
+                analysis: "1997年清华大学出版社出版《计算机与信息科学十万个为什么》科普丛书。"
+            },
+            {
+                q: "87.中国人工智能学会什么时候在哪里举办中小学工作委员会成立大会暨国际中小学人工智能教育论坛。",
+                options: ["A.2018年5月26日，上海", "B.2019年5月26日，上海", "C.2019年5月26日，南京", "D.2020年5月26日，南京"],
+                answer: "C",
+                analysis: "2019年5月26日，中国人工智能学会在南京举办相关会议。"
+            },
+            {
+                q: "88.什么时候开始将信息技术纳入初、高中学业水平考试？",
+                options: ["A.2018年", "B.2019年", "C.2017", "D.2020年"],
+                answer: "A",
+                analysis: "2018年起，信息技术正式纳入初、高中学业水平考试。"
+            },
+            {
+                q: "89.首个制作出电子机器人的科学家是？",
+                options: ["A.杰夫·霍金斯", "B.桑德拉·布莱克斯利", "C.艾伦·图灵", "D.威廉·格雷·沃尔特"],
+                answer: "D",
+                analysis: "威廉·格雷·沃尔特于1948年制作出世界首个电子机器人（乌龟机器人）。"
+            },
+            {
+                q: "90.1948年，威廉·格雷·沃尔特设计了什么机器人？",
+                options: ["A.乌龟机器人", "B.兔子机器人", "C.小狗机器人", "D.小猫机器人"],
+                answer: "A",
+                analysis: "1948年沃尔特设计出著名的乌龟机器人，是早期电子机器人代表。"
+            },
+            {
+                q: "91.谁是第一个尝试测量智力的人？",
+                options: ["A.佛朗西斯·高尔基", "B.爱因斯坦", "C.佛朗西斯·高尔顿", "D.爱迪生"],
+                answer: "C",
+                analysis: "佛朗西斯·高尔顿是首个系统开展智力测量研究的学者。"
+            },
+            {
+                q: "92.什么被称为“人工智能的果蝇”？",
+                options: ["A.中国象棋", "B.五子棋", "C.围棋", "D.国际象棋"],
+                answer: "D",
+                analysis: "国际象棋复杂度适中，是AI算法经典测试平台，被称为人工智能的果蝇。"
+            },
+            {
+                q: "93.人工智能发展史上的一个黄金时代是什么时候？",
+                options: ["A.1955-1973", "B.1956-1974", "C.1955-1974", "D.1956-1973"],
+                answer: "B",
+                analysis: "1956-1974年是人工智能发展第一个黄金时代。"
+            },
+            {
+                q: "94.人工智能第一次浪潮是以（）为核心发展起来的？",
+                options: ["A.数据推理", "B.数学推理", "C.逻辑推理", "D.物理学推理"],
+                answer: "C",
+                analysis: "第一次AI浪潮以符号逻辑推理为核心技术路线。"
+            },
+            {
+                q: "95.人工智能是什么时候再次引起公众的高度关注？",
+                options: ["A.2016年，阿尔法围棋赛", "B.2016年，阿尔法国际象棋赛", "C.2017年，阿尔法围棋赛", "D.2017年，阿尔法国际象棋赛"],
+                answer: "A",
+                analysis: "2016年AlphaGo击败李世石，让AI再次全球瞩目。"
+            },
+            {
+                q: "96.被称为人工智能的动力源？",
+                options: ["A.数据", "B.算法", "C.算力", "D.逻辑"],
+                answer: "C",
+                analysis: "算力支撑大规模计算与模型训练，被称为人工智能动力源。"
+            },
+            {
+                q: "97.华为自主研发的全场景覆盖人工智能芯片是？",
+                options: ["A.Ascend 910", "B.龙芯一号", "C.寒武纪", "D.麒麟芯片"],
+                answer: "A",
+                analysis: "华为Ascend 910是全场景AI芯片，专为高性能计算设计。"
+            },
+            {
+                q: "98.华为自主研发的全场景覆盖人工智能芯片是什么正式投入商用？",
+                options: ["A.2017年8月", "B.2018年8月", "C.2019年8月", "D.2020年8月"],
+                answer: "C",
+                analysis: "华为昇腾AI芯片于2019年8月正式商用。"
+            },
+            {
+                q: "99.以下哪个不是语音识别技术的应用场景？",
+                options: ["A.入侵检测", "B.语音合成", "C.语音翻译", "D.智能客服"],
+                answer: "A",
+                analysis: "入侵检测属于安全领域，与语音识别无关。"
+            },
+            {
+                q: "100.（）是指能够按照人的要求，在某一领域完成一项工作或一类工作的人工智能。",
+                options: ["A.超人工智能", "B.强人工智能", "C.弱人工智能", "D.人工智能"],
+                answer: "C",
+                analysis: "弱人工智能专注单一领域任务，如语音识别、图像识别，是当前主流AI形态。"
+            }
+        ];
+
+        // 全局变量
+        let currentIndex = 0;
+        let selectedOption = null;
+        let answeredCount = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let wrongList = [];
+
+        // DOM元素
+        const currentNumEl = document.getElementById('current-num');
+        const answeredEl = document.getElementById('answered');
+        const correctEl = document.getElementById('correct');
+        const wrongEl = document.getElementById('wrong');
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const resultEl = document.getElementById('result');
+        const analysisEl = document.getElementById('analysis');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const wrongBtn = document.getElementById('wrong-btn');
+        const wrongListEl = document.getElementById('wrong-list');
+        const wrongItemsEl = document.getElementById('wrong-items');
+
+        // 初始化显示题目
+        function renderQuestion() {
+            const q = questions[currentIndex];
+            questionEl.textContent = q.q;
+            optionsEl.innerHTML = '';
+            selectedOption = null;
+            resultEl.style.display = 'none';
+            analysisEl.style.display = 'none';
+            submitBtn.disabled = false;
+            nextBtn.disabled = true;
+
+            q.options.forEach(option => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.textContent = option;
+                div.onclick = () => {
+                    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                    div.classList.add('selected');
+                    selectedOption = option.charAt(0);
+                };
+                optionsEl.appendChild(div);
+            });
+        }
+
+        // 提交答案
+        submitBtn.onclick = () => {
+            if (!selectedOption) {
+                alert('请选择一个选项！');
+                return;
+            }
+
+            const q = questions[currentIndex];
+            const isCorrect = selectedOption === q.answer;
+            submitBtn.disabled = true;
+            nextBtn.disabled = false;
+            answeredCount++;
+
+            if (isCorrect) {
+                correctCount++;
+                resultEl.textContent = '✅ 回答正确！';
+                resultEl.className = 'result correct';
+            } else {
+                wrongCount++;
+                resultEl.textContent = `❌ 回答错误！正确答案：${q.answer}`;
+                resultEl.className = 'result wrong';
+                // 记录错题
+                wrongList.push({
+                    q: q.q,
+                    userAns: selectedOption,
+                    correctAns: q.answer,
+                    analysis: q.analysis
+                });
+            }
+
+            resultEl.style.display = 'block';
+            analysisEl.textContent = `解析：${q.analysis}`;
+            analysisEl.style.display = 'block';
+            updateStats();
+        };
+
+        // 下一题
+        nextBtn.onclick = () => {
+            if (currentIndex < questions.length - 1) {
+                currentIndex++;
+                currentNumEl.textContent = currentIndex + 1;
+                renderQuestion();
+            } else {
+                alert('🎉 已完成全部100道题目！');
+            }
+        };
+
+        // 查看错题
+        wrongBtn.onclick = () => {
+            if (wrongList.length === 0) {
+                alert('暂无错题！');
+                return;
+            }
+            wrongItemsEl.innerHTML = '';
+            wrongList.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'wrong-item';
+                div.innerHTML = `
+                    <div class="wrong-q">${item.q}</div>
+                    <div>你的答案：<span class="wrong-ans">${item.userAns}</span></div>
+                    <div>正确答案：<span class="wrong-correct">${item.correctAns}</span></div>
+                    <div>解析：${item.analysis}</div>
+                `;
+                wrongItemsEl.appendChild(div);
+            });
+            wrongListEl.style.display = 'block';
+        };
+
+        // 更新统计
+        function updateStats() {
+            answeredEl.textContent = answeredCount;
+            correctEl.textContent = correctCount;
+            wrongEl.textContent = wrongCount;
+        }
+
+        // 启动
+        renderQuestion();
+    </script>
+</body>
+</html>
