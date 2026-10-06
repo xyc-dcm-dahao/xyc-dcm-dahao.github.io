@@ -1,222 +1,1904 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XYC365 STUDIOS - 11岁极客的技术空间</title>
-    <style>
-        /* 全局重置 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: "Consolas", "Microsoft YaHei", monospace;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SYSTEM-WIN11-T-I // 个人主页</title>
+<meta name="description" content="11岁硬核极客的个人主页 - 全栈硬件黑客 / 赛博空间安全研究员">
+<style>
+/* ===== 全局与变量 ===== */
+:root {
+  --bg: #0a0e14;
+  --bg-soft: #0f1620;
+  --panel: #111a26;
+  --border: #1e2d3d;
+  --green: #00ff9c;
+  --cyan: #00e5ff;
+  --purple: #b967ff;
+  --text: #c8d6e5;
+  --text-dim: #6b7d91;
+  --red: #ff5c5c;
+  --yellow: #ffd93d;
+  --mono: 'Cascadia Code', 'JetBrains Mono', Consolas, 'Courier New', monospace;
+}
 
-        /* 紫渐变科技风变量 */
-        :root {
-            --purple-light: #c06c84;    /* 浅紫 */
-            --purple-main: #6c5ce7;     /* 主紫 */
-            --purple-dark: #2d3436;     /* 深紫黑 */
-            --purple-glow: #a29bfe;     /* 发光紫 */
-            --bg-gradient: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-        }
+/* 浅色主题 */
+html[data-theme="light"] {
+  --bg: #f4f7fb;
+  --bg-soft: #ffffff;
+  --panel: #ffffff;
+  --border: #d5e0ea;
+  --green: #00a86b;
+  --cyan: #0091b3;
+  --purple: #7d3cff;
+  --text: #1c2b3a;
+  --text-dim: #5b6b7c;
+  --red: #e03b3b;
+  --yellow: #b8860b;
+  background-color: #f4f7fb;
+}
+html[data-theme="light"] .nav { background: rgba(255,255,255,0.85); }
+html[data-theme="light"] #matrix { opacity: 0.06; }
+html[data-theme="light"] code { background: #eef3f8; }
+html[data-theme="light"] .terminal-bar { background: #e9eff5; }
 
-        body {
-            background: var(--bg-gradient);
-            color: #f1f1f1;
-            min-height: 100vh;
-            padding: 40px 20px;
-            line-height: 1.8;
-            /* 背景微光效果 */
-            background-size: 400% 400%;
-            animation: gradient-bg 15s ease infinite;
-        }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* 背景渐变动画 */
-        @keyframes gradient-bg {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+html { scroll-behavior: smooth; }
 
-        /* 容器 */
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px;
-            border: 1px solid rgba(162, 155, 254, 0.2);
-            border-radius: 12px;
-            background: rgba(10, 12, 28, 0.6);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 0 20px rgba(108, 92, 231, 0.15);
-        }
+html {
+  background-color: var(--bg);
+  transition: background-color .4s;
+}
+body {
+  font-family: var(--mono);
+  background-color: transparent;
+  color: var(--text);
+  line-height: 1.7;
+  overflow-x: hidden;
+  transition: color .4s;
+}
 
-        /* 标题样式 */
-        h1 {
-            /* 紫渐变文字 */
-            background: linear-gradient(90deg, var(--purple-light), var(--purple-glow), var(--purple-main));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            border-bottom: 2px solid rgba(162, 155, 254, 0.3);
-            padding-bottom: 15px;
-            position: relative;
-        }
+/* ===== 矩阵雨背景 ===== */
+#matrix {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  opacity: 0.14;
+  pointer-events: none;
+}
 
-        /* 标题小装饰 */
-        h1::after {
-            content: "";
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 80px;
-            height: 2px;
-            background: var(--purple-glow);
-            box-shadow: 0 0 10px var(--purple-glow);
-        }
+/* 内容层在矩阵雨之上 */
+.nav, .hero, .section, .footer { position: relative; z-index: 1; }
 
-        h2 {
-            color: var(--purple-glow);
-            font-size: 1.5rem;
-            margin: 30px 0 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* ===== 导航 ===== */
+.nav {
+  position: sticky;
+  top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: rgba(10, 14, 20, 0.85);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  color: var(--green);
+  font-weight: bold;
+  text-shadow: 0 0 8px rgba(0, 255, 156, 0.6);
+}
+.nav-links { display: flex; gap: 1.75rem; list-style: none; }
+.nav-links a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color .2s, text-shadow .2s;
+}
+.nav-links a:hover {
+  color: var(--cyan);
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+}
 
-        /* 小标题图标 */
-        h2::before {
-            content: "▶";
-            color: var(--purple-light);
-            animation: blink 1.5s infinite;
-        }
+/* ===== Hero ===== */
+.hero {
+  min-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  gap: 2rem;
+}
 
-        /* 闪烁动画 */
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
+.terminal-window {
+  width: min(860px, 100%);
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 0 40px rgba(0, 255, 156, 0.12), 0 20px 60px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .7rem 1rem;
+  background: #0c131c;
+  border-bottom: 1px solid var(--border);
+}
+.dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+.terminal-title {
+  margin-left: 1rem;
+  font-size: .8rem;
+  color: var(--text-dim);
+}
+.terminal-body {
+  padding: 1.5rem;
+  font-size: 1rem;
+  min-height: 180px;
+}
+.typed { white-space: pre-wrap; color: var(--green); }
+.cursor { color: var(--cyan); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
 
-        /* 普通文字 */
-        p {
-            color: #dcdde1;
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
+.hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.btn {
+  padding: .8rem 1.8rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all .25s;
+  border: 1px solid transparent;
+}
+.btn.primary {
+  background: var(--green);
+  color: #04140d;
+  box-shadow: 0 0 20px rgba(0, 255, 156, 0.4);
+}
+.btn.primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(0, 255, 156, 0.8); }
+.btn.ghost {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.btn.ghost:hover { background: rgba(0, 229, 255, 0.1); transform: translateY(-3px); }
 
-        /* UP主信息高亮 */
-        .up {
-            color: var(--purple-glow);
-            font-weight: bold;
-            text-shadow: 0 0 8px rgba(162, 155, 254, 0.4);
-        }
+/* ===== Section 通用 ===== */
+.section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+}
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: var(--text);
+}
+.section-title .prompt { color: var(--green); margin-right: .6rem; }
 
-        /* 工具标签 */
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin: 15px 0;
-        }
+/* ===== 卡片 ===== */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 2rem;
+  position: relative;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: linear-gradient(var(--green), var(--cyan));
+  border-radius: 10px 0 0 10px;
+}
 
-        .tag {
-            padding: 8px 15px;
-            border-radius: 8px;
-            background: linear-gradient(45deg, rgba(108, 92, 231, 0.2), rgba(192, 108, 132, 0.2));
-            border: 1px solid rgba(162, 155, 254, 0.3);
-            color: #f1f1f1;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-        }
+/* ===== 关于信息列表 ===== */
+.info-list { list-style: none; display: grid; gap: 1rem; }
+.info-list li { display: flex; flex-wrap: wrap; gap: 1rem; }
+.info-list .key {
+  min-width: 110px;
+  color: var(--cyan);
+  font-weight: bold;
+}
+.info-list .val { flex: 1; color: var(--text); }
+.info-list em { color: var(--text-dim); font-style: normal; }
+.quote { color: var(--green); }
+code {
+  background: #06121a;
+  color: var(--yellow);
+  padding: .1rem .45rem;
+  border-radius: 4px;
+  font-size: .9em;
+  border: 1px solid var(--border);
+}
 
-        /* 标签hover效果 */
-        .tag:hover {
-            transform: translateY(-3px);
-            background: linear-gradient(45deg, rgba(108, 92, 231, 0.3), rgba(192, 108, 132, 0.3));
-            box-shadow: 0 0 12px rgba(162, 155, 254, 0.4);
-        }
+/* ===== 技能网格 ===== */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.skill-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.75rem;
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.skill-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--green);
+  box-shadow: 0 0 30px rgba(0, 255, 156, 0.15);
+}
+.skill-card h3 {
+  color: var(--green);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+.skill-card ul { list-style: none; display: grid; gap: .7rem; }
+.skill-card li {
+  padding-left: 1.2rem;
+  position: relative;
+  font-size: .93rem;
+  color: var(--text);
+}
+.skill-card li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+}
 
-        /* 列表样式 */
-        ul {
-            color: #dcdde1;
-            margin-left: 30px;
-            margin-top: 10px;
-        }
+/* ===== 项目 ===== */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+.project-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.75rem;
+  transition: transform .25s, border-color .25s, box-shadow .25s;
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--cyan);
+  box-shadow: 0 0 30px rgba(0, 229, 255, 0.15);
+}
+.project-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.project-head h3 { font-size: 1.05rem; color: var(--text); }
+.tag {
+  font-size: .72rem;
+  padding: .25rem .6rem;
+  border-radius: 20px;
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  white-space: nowrap;
+}
+.project-card p { font-size: .92rem; margin-bottom: .6rem; color: var(--text); }
+.project-card strong { color: var(--cyan); font-weight: normal; }
+.harvest { color: var(--green) !important; }
 
-        li {
-            margin-bottom: 8px;
-            position: relative;
-        }
+/* ===== 时间线 ===== */
+.timeline { display: grid; gap: 1.75rem; }
+.tl-item { display: flex; gap: 1.25rem; align-items: flex-start; }
+.tl-dot {
+  flex-shrink: 0;
+  width: 14px; height: 14px;
+  margin-top: .35rem;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+}
+.tl-item h3 { color: var(--cyan); margin-bottom: .4rem; font-size: 1.05rem; }
 
-        /* 列表项装饰 */
-        li::before {
-            content: "";
-            position: absolute;
-            left: -15px;
-            top: 8px;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--purple-glow);
-            box-shadow: 0 0 6px var(--purple-glow);
-        }
+/* ===== 自我评价 ===== */
+.self-eval ul { list-style: none; display: grid; gap: .8rem; margin-bottom: 1.5rem; }
+.self-eval li { padding-left: 1.4rem; position: relative; }
+.self-eval li::before {
+  content: '✓';
+  position: absolute; left: 0;
+  color: var(--green);
+}
+.warning {
+  background: rgba(255, 92, 92, 0.08);
+  border: 1px solid rgba(255, 92, 92, 0.4);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  color: #ffb3b3;
+  font-size: .92rem;
+}
 
-        /* 页脚签名 */
-        .signature {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(162, 155, 254, 0.2);
-            color: #a29bfe;
-            font-size: 0.9rem;
-            text-align: right;
-        }
-    </style>
+/* ===== Footer ===== */
+.footer {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border-top: 1px solid var(--border);
+  color: var(--text-dim);
+  font-size: .85rem;
+}
+.footer .heart { color: var(--red); }
+.footer-sub { margin-top: .5rem; opacity: .6; }
+
+/* ===== 科乐美秘技彩蛋 ===== */
+.konami-toast {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translate(-50%, -30px);
+  z-index: 100000;
+  background: #111a26;
+  border: 2px solid var(--green);
+  color: var(--green);
+  font-family: var(--mono);
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: .8rem 1.8rem;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 255, 156, 0.7);
+  opacity: 0;
+  transition: opacity .4s, transform .4s;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(0,255,156,.8);
+}
+.konami-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.konami-lives {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  overflow: hidden;
+}
+.konami-life {
+  position: absolute;
+  top: -50px;
+  color: #ff4d6d;
+  text-shadow: 0 0 12px rgba(255, 77, 109, 0.9);
+  animation: lifeFall linear forwards;
+}
+@keyframes lifeFall {
+  0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0.7; }
+}
+
+/* ===== 被 rm 删除的板块 ===== */
+.section.erased {
+  display: none !important;
+}
+
+/* ===== 滚动入场动画 ===== */
+.section { opacity: 0; transform: translateY(30px); transition: opacity .7s, transform .7s; }
+.section.visible { opacity: 1; transform: translateY(0); }
+
+
+/* ===== 神秘解锁入口按钮 ===== */
+.secret-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--purple);
+  font-family: var(--mono);
+  font-size: .85rem;
+  padding: 0 .9rem;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: .6rem;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  white-space: nowrap;
+}
+.secret-toggle:hover {
+  border-color: var(--purple);
+  box-shadow: 0 0 14px rgba(185, 103, 255, 0.45);
+  transform: translateY(-2px);
+}
+
+/* ===== 模态框 ===== */
+.secret-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .35s, visibility .35s;
+}
+.secret-modal.open { opacity: 1; visibility: visible; }
+.secret-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4, 8, 12, 0.82);
+  backdrop-filter: blur(6px);
+}
+.secret-dialog {
+  position: relative;
+  z-index: 1;
+  width: min(460px, 92vw);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.75rem 2.25rem;
+  text-align: center;
+  transform: scale(.85) translateY(20px);
+  opacity: 0;
+  transition: transform .4s cubic-bezier(.2,.9,.3,1.4), opacity .4s;
+  box-shadow: 0 0 60px rgba(185, 103, 255, 0.25), 0 30px 80px rgba(0,0,0,.7);
+}
+.secret-modal.open .secret-dialog { transform: scale(1) translateY(0); opacity: 1; }
+.secret-close {
+  position: absolute;
+  top: .8rem; right: .9rem;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: color .2s, transform .2s;
+}
+.secret-close:hover { color: var(--red); transform: rotate(90deg); }
+
+/* ===== 大锁 ===== */
+.lock-stage {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.lock-svg {
+  color: var(--purple);
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 0 12px rgba(185,103,255,.6));
+  transition: filter .3s;
+}
+.lock-shackle {
+  transform-origin: 30px 70px;
+  transition: transform .6s cubic-bezier(.3,1.6,.5,1);
+}
+.lock-glow {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,215,0,.9), rgba(255,150,0,0) 70%);
+  z-index: 1;
+  pointer-events: none;
+}
+.lock-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* 验证失败：抖动 */
+.lock-stage.shake .lock-svg { animation: lockShake .5s; }
+@keyframes lockShake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-10px) rotate(-4deg); }
+  40% { transform: translateX(10px) rotate(4deg); }
+  60% { transform: translateX(-7px) rotate(-3deg); }
+  80% { transform: translateX(7px) rotate(3deg); }
+}
+
+/* 解锁成功：锁碎裂 → 化为代码 → 消失 */
+.lock-stage.cracking .lock-svg {
+  animation: crackShake .5s ease-in forwards;
+  color: #ffd700;
+  filter: drop-shadow(0 0 26px rgba(255,215,0,.95));
+}
+@keyframes crackShake {
+  0%   { transform: translateX(0) scale(1); }
+  15%  { transform: translateX(-6px) rotate(-3deg) scale(1.02); }
+  30%  { transform: translateX(6px) rotate(3deg) scale(1.02); }
+  45%  { transform: translateX(-5px) rotate(-2deg) scale(1.04); }
+  60%  { transform: translateX(5px) rotate(2deg) scale(1.04); }
+  80%  { transform: translateX(-3px) scale(1.08); }
+  100% { transform: translateX(0) scale(1.12); opacity: 0.15; }
+}
+/* ===== 物理碎片舞台 ===== */
+.phys-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  pointer-events: none;       /* 默认穿透，只有碎片本身可拖 */
+  overflow: hidden;
+}
+/* 每个物理碎片（真实代码 token） */
+.phys-token {
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: bold;
+  padding: 3px 7px;
+  border-radius: 5px;
+  color: #0a0e14;
+  background: #ffd700;
+  border: 1px solid #b8860b;
+  box-shadow: 0 0 10px rgba(255,215,0,.6);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: auto;
+  cursor: grab;
+  will-change: transform;
+}
+.phys-token.green { background: #00ff9c; border-color: #00a86b; box-shadow: 0 0 10px rgba(0,255,156,.6); }
+.phys-token.cyan  { background: #00e5ff; border-color: #0091b3; box-shadow: 0 0 10px rgba(0,229,255,.6); }
+.phys-token.purple{ background: #b967ff; border-color: #7d3cff; box-shadow: 0 0 10px rgba(185,103,255,.6); }
+.phys-token.dragging { cursor: grabbing; z-index: 10; }
+
+/* ===== EFI 黑屏 ===== */
+.efi-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #000;
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 8vh 0 0 8vw;
+  cursor: pointer;
+  font-family: 'Consolas', 'Lucida Console', 'Courier New', monospace;
+}
+.efi-screen.show { display: flex; }
+.efi-text {
+  margin: 0;
+  font-size: clamp(15px, 1.6vw, 20px);
+  line-height: 1.7;
+  white-space: pre;
+  color: #c8c8c8;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  font-weight: normal;
+  -webkit-font-smoothing: antialiased;
+}
+.efi-caret {
+  /* 顶格：抵消 .efi-screen 的 8vw 左内边距 */
+  margin-left: -8vw;
+  margin-top: .2em;
+  font-size: clamp(15px, 1.6vw, 20px);
+  line-height: 1.4;
+  color: #c8c8c8;
+  font-family: inherit;
+  animation: caretBlink 1s steps(1) infinite;
+}
+@keyframes caretBlink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+.efi-hint {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #555;
+  font-size: .78rem;
+  animation: blink 1.4s steps(1) infinite;
+}
+
+/* ===== 假 vim 编辑器 ===== */
+.vim-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10001;
+  background: #0a0e14;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--mono);
+  color: #c8d6e5;
+}
+.vim-title {
+  padding: .5rem 1rem;
+  background: #111a26;
+  border-bottom: 1px solid #1e2d3d;
+  color: var(--green);
+  font-size: .85rem;
+}
+.vim-editor {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: #c8d6e5;
+  font-family: var(--mono);
+  font-size: 1rem;
+  line-height: 1.6;
+  padding: 1rem;
+  caret-color: var(--green);
+}
+.vim-status {
+  padding: .4rem 1rem;
+  background: #111a26;
+  border-top: 1px solid #1e2d3d;
+  color: var(--text-dim);
+  font-size: .8rem;
+}
+.vim-status .vim-mode { color: var(--green); }
+.vim-status .vim-cmd { color: var(--yellow); }
+.vim-editor:read-only { cursor: default; }
+
+/* ===== 文本与表单 ===== */
+.secret-title { color: var(--purple); font-size: 1.15rem; margin-bottom: .4rem; }
+.secret-desc { color: var(--text-dim); font-size: .88rem; margin-bottom: 1.25rem; }
+.secret-form { display: flex; gap: .6rem; }
+.secret-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: .95rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.secret-input:focus {
+  border-color: var(--purple);
+  box-shadow: 0 0 14px rgba(185,103,255,.35);
+}
+.secret-btn { padding: .75rem 1.4rem; }
+.secret-msg {
+  min-height: 1.4rem;
+  margin-top: .9rem;
+  font-size: .85rem;
+}
+.secret-msg.err { color: var(--red); }
+.secret-msg.ok { color: var(--green); }
+
+/* ===== 解锁后内容 ===== */
+.secret-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height .6s ease, opacity .6s ease, margin .6s;
+  color: var(--text);
+  font-size: .92rem;
+  white-space: pre-wrap;
+  text-align: left;
+}
+.secret-content.show {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed var(--border);
+}
+
+/* 响应式 */
+@media (max-width: 640px) {
+  .secret-toggle { font-size: .75rem; padding: 0 .6rem; margin-left: .3rem; }
+  .secret-title { font-size: 1rem; }
+}
+
+/* ===== 响应式 ===== */
+/* ===== 主题切换按钮 ===== */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 1.1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+  line-height: 1;
+}
+.theme-toggle:hover {
+  border-color: var(--green);
+  box-shadow: 0 0 14px rgba(0, 255, 156, 0.4);
+  transform: rotate(20deg);
+}
+
+/* ===== 交互式终端 ===== */
+.console-window { margin-top: .5rem; }
+.console-body {
+  padding: 1.2rem 1.4rem;
+  font-size: .92rem;
+  max-height: 340px;
+  overflow-y: auto;
+}
+.console-output { white-space: pre-wrap; margin-bottom: .4rem; }
+.console-output .line { color: var(--text); }
+.console-output .echo { color: var(--text-dim); }
+.console-output .echo .cmd-ps1 { color: var(--green); }
+.console-output .ok { color: var(--green); }
+.console-output .warn { color: var(--yellow); }
+.console-output .err { color: var(--red); }
+.console-output .info { color: var(--cyan); }
+.console-input-line { display: flex; align-items: center; gap: .5rem; }
+.console-ps1 { color: var(--green); white-space: nowrap; }
+.console-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--cyan);
+  font-family: var(--mono);
+  font-size: .92rem;
+  caret-color: var(--cyan);
+}
+@media (max-width: 640px) {
+  .console-body { font-size: .82rem; padding: 1rem; }
+  .console-ps1 { font-size: .78rem; }
+}
+
+@media (max-width: 640px) {
+  .nav { padding: .9rem 1.2rem; }
+  .nav-links { gap: 1rem; font-size: .85rem; }
+  .terminal-body { font-size: .85rem; padding: 1rem; }
+  .section { padding: 3rem 1.2rem; }
+  .section-title { font-size: 1.2rem; }
+  .info-list .key { min-width: 80px; }
+}
+
+</style>
 </head>
 <body>
-    <div class="container">
-        <!-- 标题 -->
-        <h1>XYC365 STUDIOS</h1>
-        <p>11岁极客的技术实验空间 | 逆向 · 安全 · AI · 系统</p>
 
-        <!-- 关于我 -->
-        <h2>🧠 关于开发者</h2>
-        <p>B站 UP 主：<span class="up">SYSTEM-WIN11-T-I</span></p>
-        <p>11岁，沉迷技术的小极客，喜欢折腾各种工具和底层技术～</p>
+<!-- 矩阵雨背景 -->
+<canvas id="matrix"></canvas>
 
-        <!-- 常用工具 -->
-        <h2>⚙️ 常用工具栈</h2>
-        <div class="tag-container">
-            <div class="tag">x64dbg (调试)</div>
-            <div class="tag">Kali Linux (安全)</div>
-            <div class="tag">Burp Suite (渗透)</div>
-            <div class="tag">RetDec (反编译)</div>
-            <div class="tag">PyTorch (AI)</div>
-            <div class="tag">C++ / Python (编程)</div>
-            <div class="tag">Windows 底层 (折腾)</div>
-        </div>
+<!-- 顶部导航 -->
+<nav class="nav">
+  <div class="nav-logo">&gt;_ SYSTEM-WIN11-T-I</div>
+  <ul class="nav-links">
+    <li><a href="#about">关于</a></li>
+    <li><a href="#skills">技能</a></li>
+    <li><a href="#projects">项目</a></li>
+    <li><a href="#contact">联系</a></li>
+  </ul>
+  <button id="theme-toggle" class="theme-toggle" aria-label="切换主题" title="切换主题">🌙</button>
+  <button id="secret-toggle" class="secret-toggle" aria-label="神秘的东西" title="一些神秘的东西">🔒 神秘</button>
+</nav>
 
-        <!-- 研究方向 -->
-        <h2>🚀 研究方向</h2>
-        <ul>
-            <li>软件逆向分析与调试技巧</li>
-            <li>网络安全基础与渗透测试</li>
-            <li>二进制文件反编译与分析</li>
-            <li>PyTorch 入门与AI模型尝试</li>
-            <li>Windows系统优化与权限研究</li>
-        </ul>
-
-        <!-- 关于本站 -->
-        <h2>📌 关于这个空间</h2>
-        <p>这里是我记录技术笔记、分享实验成果的小站，没有花里胡哨的内容，只有纯粹的技术探索～</p>
-        <p>保持好奇，保持折腾，技术没有年龄限制！</p>
-
-        <!-- 签名 -->
-        <div class="signature">
-            XYC365 STUDIOS © 2026 | BY SYSTEM-WIN11-T-I
-        </div>
+<!-- Hero 区 -->
+<header class="hero">
+  <div class="terminal-window hero-terminal">
+    <div class="terminal-bar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="terminal-title">C:\Users\Admin\Desktop\个人主页&gt; whoami</span>
     </div>
-</body>
-</html>
+    <div class="terminal-body">
+      <pre id="typed" class="typed"></pre><span class="cursor">█</span>
+    </div>
+  </div>
+  <div class="hero-actions">
+    <a href="#projects" class="btn primary">查看项目 &gt;&gt;</a>
+    <a href="#contact" class="btn ghost">联系我</a>
+  </div>
+
+  <!-- 交互式终端 -->
+  <div class="terminal-window console-window">
+    <div class="terminal-bar">
+      <span class="dot red"></span>
+      <span class="dot yellow"></span>
+      <span class="dot green"></span>
+      <span class="terminal-title">interactive console — 输入 help 查看命令</span>
+    </div>
+    <div class="console-body" id="console-body">
+      <div class="console-output" id="console-output"></div>
+      <div class="console-input-line">
+        <span class="console-ps1" id="console-ps1">guest@SYSTEM-WIN11-T-I:~$</span>
+        <input id="console-input" class="console-input" type="text" autocomplete="off" spellcheck="false" aria-label="命令输入">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 关于 -->
+<section id="about" class="section">
+  <h2 class="section-title"><span class="prompt">$</span> cat about.txt</h2>
+  <div class="card">
+    <ul class="info-list">
+      <li><span class="key">代号</span><span class="val">SYSTEM-WIN11-T-I</span></li>
+      <li><span class="key">真实年龄</span><span class="val">11 岁 <em>（心理年龄和代码年龄已超 30 岁）</em></span></li>
+      <li><span class="key">坐标</span><span class="val">中国 · 长沙 🌶️</span></li>
+      <li><span class="key">主力战机</span><span class="val">联想拯救者 R7000 2021 (R7 5800H + RTX 3050)</span></li>
+      <li><span class="key">格言</span><span class="val quote">"只要我不碰 <code>csrss.exe</code>，Windows 就还能再战五百年。"</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 技能 -->
+<section id="skills" class="section">
+  <h2 class="section-title"><span class="prompt">$</span> ls -la ./skills</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <h3>🔩 底层硬件与架构</h3>
+      <ul>
+        <li><strong>数字逻辑设计：</strong>熟练使用 <b>Logisim</b> 搭建 8 位 CPU，手搓 ALU、寄存器与 RAM</li>
+        <li><strong>汇编语言：</strong>能为自研 CPU 编写汇编指令，理解机器码级执行流程</li>
+        <li><strong>硬件开发：</strong>熟练 <b>Arduino Uno</b>、<b>ESP8266</b> 引脚控制与传感器采集；<b>Orange Pi</b> 即将到货</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <h3>🛡️ 网络安全与渗透测试</h3>
+      <ul>
+        <li><strong>网络空间测绘：</strong>熟练使用 <b>FOFA</b> 进行资产扫描与信息搜集</li>
+        <li><strong>抓包与流量分析：</strong>精通 <b>Burp Suite</b>、<b>Wireshark</b>，深谙 <code>HttpOnly</code> Cookie 机制</li>
+        <li><strong>浏览器底层：</strong>掌握 <code>Chrome hidden bypass (research only)</code>，证书报错页面降维打击</li>
+        <li><strong>系统极限测试：</strong>擅长用 <b>OpenSpeedy</b> 对 <code>svchost.exe</code> 做 100 倍速压力测试</li>
+      </ul>
+    </div>
+    <div class="skill-card">
+      <h3>🎨 前端与全栈开发</h3>
+      <ul>
+        <li><strong>Vue 3 狂热信徒：</strong>正在向 "Vibe Coding" 领域进军</li>
+        <li><strong>视觉伪造与逆向：</strong>熟练 <b>Adobe Photoshop 2026</b> 进行高精度 UI 伪造</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 项目 -->
+<section id="projects" class="section">
+  <h2 class="section-title"><span class="prompt">$</span> git log --oneline</h2>
+  <div class="projects-grid">
+
+    <article class="project-card">
+      <div class="project-head">
+        <h3>《赛博白嫖与反被白嫖的博弈》</h3>
+        <span class="tag">网络安全</span>
+      </div>
+      <p><strong>背景：</strong>试图通过积分墙平台换取 Minecraft 正版激活码。</p>
+      <p><strong>过程：</strong>利用 <code>Chrome hidden bypass (research only)</code> 突破 cpx-research 证书限制，经历命运转盘的 "-60 GC" 重创，最终被风控系统踢出。</p>
+      <p class="harvest"><strong>收获：</strong>深刻理解了商业问卷平台的后台风控算法。</p>
+    </article>
+
+    <article class="project-card">
+      <div class="project-head">
+        <h3>《Windows 内核的极限生存挑战》</h3>
+        <span class="tag">系统底层</span>
+      </div>
+      <p><strong>背景：</strong>验证开源变速工具 OpenSpeedy 的威力。</p>
+      <p><strong>过程：</strong>将 <code>svchost.exe</code> 加速至 <b>97.724 倍</b>，导致内存飙升至 86%，CPU 满载。</p>
+      <p class="harvest"><strong>收获：</strong>掌握了 Windows 核心进程的调度逻辑。</p>
+    </article>
+
+    <article class="project-card">
+      <div class="project-head">
+        <h3>《伪装大师的视觉欺骗》</h3>
+        <span class="tag">前端 / 视觉</span>
+      </div>
+      <p><strong>背景：</strong>想要获得 B 站创始人认证。</p>
+      <p><strong>过程：</strong>从修改 Cookie 失败，到 CSS 伪元素注入，最终回归 Photoshop 方案 D。</p>
+      <p class="harvest"><strong>收获：</strong>精通图层叠加与字体排版，体会到 "物理外挂最为致命"。</p>
+    </article>
+
+  </div>
+</section>
+
+<!-- 教育与规划 -->
+<section id="edu" class="section">
+  <h2 class="section-title"><span class="prompt">$</span> cat roadmap.md</h2>
+  <div class="card timeline">
+    <div class="tl-item">
+      <span class="tl-dot"></span>
+      <div>
+        <h3>🎓 小学在读</h3>
+        <p>主修语文、数学、英语（应付爸妈），辅修计算机底层架构（自学）。</p>
+      </div>
+    </div>
+    <div class="tl-item">
+      <span class="tl-dot"></span>
+      <div>
+        <h3>🚀 未来规划</h3>
+        <p>计划在 14 岁前拿下某个 CVE 编号，或者用 FPGA 真正点亮一颗自己的 CPU。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 自我评价 -->
+<section id="contact" class="section">
+  <h2 class="section-title"><span class="prompt">$</span> echo $SELF</h2>
+  <div class="card self-eval">
+    <ul>
+      <li>拥有极强的逆向思维和折腾精神，不达目的不罢休。</li>
+      <li>对硬件底层和网络安全有极高的热情。</li>
+      <li>目前正从 "物理黑客" 向 "Vibe Coding 架构师" 转型中。</li>
+    </ul>
+    <div class="warning">
+      ⚠️ <strong>注意事项：</strong>请勿向我提供真实的生产环境服务器，否则我可能会尝试给它加速。
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>© <span id="year"></span> SYSTEM-WIN11-T-I · 用 <span class="heart">♥</span> 和辣椒构建</p>
+  <p class="footer-sub">// 只要不碰 csrss.exe，一切都好说</p>
+</footer>
+
+<!-- 神秘解锁模态框 -->
+<div id="secret-modal" class="secret-modal" aria-hidden="true">
+  <div class="secret-backdrop"></div>
+  <div class="secret-dialog">
+    <button class="secret-close" id="secret-close" aria-label="关闭">✕</button>
+
+    <div class="lock-stage">
+      <svg class="lock-svg" viewBox="0 0 120 160" width="140" height="186">
+        <!-- 锁梁 -->
+        <path class="lock-shackle" d="M 30 70 L 30 45 A 30 30 0 0 1 90 45 L 90 70"
+              fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+        <!-- 锁体 -->
+        <rect class="lock-body" x="15" y="70" width="90" height="75" rx="12"
+              fill="currentColor"/>
+        <!-- 锁孔 -->
+        <circle class="lock-keyhole" cx="60" cy="103" r="9" fill="#0a0e14"/>
+        <rect class="lock-keyhole" x="56" y="103" width="8" height="20" rx="3" fill="#0a0e14"/>
+      </svg>
+      <div class="lock-glow"></div>
+      <div class="lock-particles" id="lock-particles"></div>
+    </div>
+
+    <h3 class="secret-title">🔐 一些神秘的东西</h3>
+    <p class="secret-desc">需要密码才能解锁</p>
+
+    <div class="secret-form" id="secret-form">
+      <input id="secret-input" class="secret-input" type="password"
+             placeholder="输入密码..." autocomplete="off" spellcheck="false">
+      <button id="secret-submit" class="btn primary secret-btn">开锁</button>
+    </div>
+    <p class="secret-msg" id="secret-msg"></p>
+
+    <div class="secret-content" id="secret-content"></div>
+  </div>
+</div>
+
+<script>
+/* ===== 矩阵雨背景 ===== */
+(function matrixRain() {
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+  const chars = 'アイウエオカキクケコ01SYSTEM-WIN11-T-I{}[]<>/\\#$%&*';
+  const fontSize = 14;
+  let columns, drops;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    drops = new Array(columns).fill(1);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function draw() {
+    ctx.fillStyle = 'rgba(10, 14, 20, 0.08)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff9c';
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars.charAt(Math.floor(Math.random() * chars.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw, 55);
+})();
+
+/* ===== 打字机效果 ===== */
+(function typewriter() {
+  const el = document.getElementById('typed');
+  const lines = [
+    '> whoami',
+    'SYSTEM-WIN11-T-I',
+    '',
+    '> cat role.txt',
+    '全栈硬件黑客 / 赛博空间安全研究员 / 混沌工程测试专家',
+    '',
+    '> echo $MOTTO',
+    '"只要我不碰 csrss.exe，Windows 就还能再战五百年。"',
+    '',
+    '> status --current',
+    '🟢 Online · 长沙 · 正在向 Vibe Coding 架构师转型'
+  ];
+  const full = lines.join('\n');
+  let i = 0;
+  function type() {
+    if (i <= full.length) {
+      el.textContent = full.slice(0, i);
+      i++;
+      // 遇到换行稍作停顿，模拟真实输入
+      const delay = full[i - 1] === '\n' ? 220 : 32;
+      setTimeout(type, delay);
+    }
+  }
+  setTimeout(type, 500);
+})();
+
+/* ===== 滚动入场动画 ===== */
+(function scrollReveal() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.section').forEach((s) => observer.observe(s));
+})();
+
+/* ===== 主题切换 ===== */
+(function themeToggle() {
+  const btn = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  const saved = localStorage.getItem('theme');
+  if (saved === 'light') {
+    html.setAttribute('data-theme', 'light');
+    btn.textContent = '☀️';
+  }
+  btn.addEventListener('click', () => {
+    const isLight = html.getAttribute('data-theme') === 'light';
+    if (isLight) {
+      html.removeAttribute('data-theme');
+      btn.textContent = '🌙';
+      localStorage.setItem('theme', 'dark');
+    } else {
+      html.setAttribute('data-theme', 'light');
+      btn.textContent = '☀️';
+      localStorage.setItem('theme', 'light');
+    }
+  });
+})();
+
+/* ===== 交互式终端 ===== */
+(function interactiveConsole() {
+  const output = document.getElementById('console-output');
+  const input = document.getElementById('console-input');
+  const body = document.getElementById('console-body');
+
+  const banner = 'SYSTEM-WIN11-T-I interactive shell v1.0\n' +
+                 '输入 help 查看可用命令。可用 ↑/↓ 调出历史。';
+  print(banner, 'info');
+
+  const commands = {
+    help() {
+      return '可用命令:\n' +
+        '  help            显示本帮助\n' +
+        '  whoami          显示身份\n' +
+        '  skills          列出技术栈\n' +
+        '  projects        列出项目\n' +
+        '  motto           查看格言\n' +
+        '  contact         联系方式\n' +
+        '  theme           切换深浅主题\n' +
+        '  clear           清屏\n' +
+        '  ls [路径]       列出目录\n' +
+        '  cd <目录>       切换目录（cd .. 返回）\n' +
+        '  mkdir <名>      创建目录\n' +
+        '  touch <名>      创建空文件\n' +
+        '  cat <文件>      查看文件内容\n' +
+        '  rm [-r] <文件>  删除文件/目录\n' +
+        '  vim <文件>      打开编辑器\n' +
+        '  rm -rf /*       危险操作，请勿执行 ⚠️\n' +
+        '  sudo            试试看会发生什么 😏';
+    },
+    whoami() {
+      return 'SYSTEM-WIN11-T-I :: 11岁硬核极客\n' +
+             '全栈硬件黑客 / 赛博空间安全研究员 / 混沌工程测试专家\n' +
+             '坐标: 中国·长沙 🌶️';
+    },
+    skills() {
+      return '🔩 底层硬件: Logisim / 汇编 / Arduino / ESP8266 / Orange Pi(即将)\n' +
+             '🛡️ 网络安全: FOFA / Burp Suite / Wireshark / Chrome hidden bypass (research only) / OpenSpeedy\n' +
+             '🎨 前端开发: Vue 3 / Photoshop 2026 / Vibe Coding(进军中)';
+    },
+    projects() {
+      return '1. 《赛博白嫖与反被白嫖的博弈》  [网络安全]\n' +
+             '2. 《Windows 内核的极限生存挑战》 [系统底层]\n' +
+             '3. 《伪装大师的视觉欺骗》        [前端/视觉]';
+    },
+    motto() {
+      return '"只要我不碰 csrss.exe，Windows 就还能再战五百年。"';
+    },
+    contact() {
+      return '📮 请勿向我提供真实的生产环境服务器，否则我可能会尝试给它加速。';
+    },
+    theme() {
+      document.getElementById('theme-toggle').click();
+      return '主题已切换。';
+    },
+    clear() {
+      output.innerHTML = '';
+      return null;
+    },
+    rm(args) {
+      const joined = args.join(' ');
+      // rm -rf /* 或 .* → 删库彩蛋
+      if (/-rf/.test(joined) && /(\/\*|\.\*|\*)/.test(joined)) {
+        state.awaitingConfirm = 'rm';
+        return "Did you wan't Delete library and run? (y/n)";
+      }
+      // 删单个文件/目录
+      const target = args.filter((a) => !a.startsWith('-'))[0];
+      if (!target) return 'rm: 缺少操作数';
+      const r = resolvePath(target);
+      if (!r.node || !r.parent) return 'rm: 无法删除 "' + target + '": 没有那个文件或目录';
+      const isDir = r.node.type === 'dir';
+      if (isDir && !/-r/.test(joined)) return 'rm: 无法删除 "' + target + '": 是一个目录（用 -r）';
+      delete r.parent.children[r.name];
+      // 联动隐藏主页对应板块
+      const hit = SECTION_MAP[r.name];
+      if (hit) {
+        const sec = document.querySelector(hit);
+        if (sec) sec.classList.add('erased');
+      }
+      return null;
+    },
+    vim(args) {
+      const f = args[0];
+      if (!f) return 'vim: 需要文件名';
+      openVim(f);
+      return null;
+    },
+    sudo() {
+      return 'bash: sudo: permission denied (nice try though 😎)';
+    }
+  };
+
+  // ===== 终端状态 =====
+  const state = { awaitingConfirm: null, cwd: ['~'] };
+
+  // ===== 虚拟文件系统 =====
+  // 节点: { type:'dir'|'file', children:{}, content:'' }
+  const FS = {
+    '~': { type: 'dir', children: {
+      'about.txt': { type: 'file', content: '代号 SYSTEM-WIN11-T-I，11 岁，长沙，联想拯救者 R7000 2021。' },
+      'roadmap.md': { type: 'file', content: '14 岁前拿下某个 CVE 编号，或用 FPGA 点亮自己的 CPU。' },
+      'motto.txt': { type: 'file', content: '"只要我不碰 csrss.exe，Windows 就还能再战五百年。"' },
+      'skills': { type: 'dir', children: {
+        'hardware.txt': { type: 'file', content: 'Logisim / 汇编 / Arduino / ESP8266 / Orange Pi' },
+        'security.txt': { type: 'file', content: 'FOFA / Burp Suite / Wireshark / Chrome hidden bypass (research only)' }
+      }},
+      'projects': { type: 'dir', children: {
+        'p1.txt': { type: 'file', content: '《赛博白嫖与反被白嫖的博弈》' },
+        'p2.txt': { type: 'file', content: '《Windows 内核的极限生存挑战》' },
+        'p3.txt': { type: 'file', content: '《伪装大师的视觉欺骗》' }
+      }},
+      'flag': { type: 'file', content: 'flag{th1s_1s_n0t_4_r34l_fl4g}' }
+    }}
+  };
+
+  // 文件 → 主页板块 映射
+  const SECTION_MAP = {
+    'about.txt': '#about',
+    'skills': '#skills',
+    'projects': '#projects',
+    'roadmap.md': '#edu'
+  };
+
+  // 用路径数组取目录节点
+  function nodeAt(pathArr) {
+    let node = FS['~'];
+    for (const seg of pathArr.slice(1)) {
+      if (!node || node.type !== 'dir' || !node.children[seg]) return null;
+      node = node.children[seg];
+    }
+    return node;
+  }
+  // 当前目录节点
+  function cwdNode() { return nodeAt(state.cwd) || FS['~']; }
+  // 当前目录显示名（用于提示符）
+  function cwdName() {
+    return state.cwd.length === 1 ? '~' : state.cwd.join('/');
+  }
+  // 解析相对/绝对路径到 {parent, name, node}
+  function resolvePath(p) {
+    let segs;
+    if (p === '~') segs = ['~'];
+    else if (p.startsWith('~/')) segs = ['~'].concat(p.slice(2).split('/').filter(Boolean));
+    else if (p.startsWith('/')) segs = ['~'].concat(p.split('/').filter(Boolean));
+    else if (p === '..') segs = state.cwd.slice(0, -1).length ? state.cwd.slice(0, -1) : ['~'];
+    else if (p === '.') segs = state.cwd.slice();
+    else segs = state.cwd.concat(p.split('/').filter(Boolean));
+
+    const parentArr = segs.slice(0, -1).length ? segs.slice(0, -1) : ['~'];
+    const name = segs[segs.length - 1];
+    const parent = nodeAt(parentArr);
+    const node = parent && parent.type === 'dir' ? parent.children[name] : null;
+    return { parent, name, node };
+  }
+
+  commands['ls'] = (args) => {
+    const target = args && args[0] ? resolvePath(args[0]) : { node: cwdNode() };
+    const dir = target.node;
+    if (!dir || dir.type !== 'dir') return 'ls: ' + (args[0] || '') + ': 不是目录';
+    const names = Object.keys(dir.children).map((n) => {
+      const c = dir.children[n];
+      return c.type === 'dir' ? n + '/' : n;
+    });
+    return names.length ? names.join('  ') : '(空目录)';
+  };
+
+  commands['cat'] = (args) => {
+    const f = args[0];
+    if (!f) return '用法: cat <文件名>';
+    const t = resolvePath(f);
+    if (!t.node) return 'cat: ' + f + ': 没有那个文件或目录';
+    if (t.node.type === 'dir') return 'cat: ' + f + ': 是一个目录';
+    return t.node.content;
+  };
+
+  commands['cd'] = (args) => {
+    const t = args[0];
+    if (!t || t === '~') { state.cwd = ['~']; return null; }
+    if (t === '..') {
+      if (state.cwd.length > 1) state.cwd = state.cwd.slice(0, -1);
+      return null;
+    }
+    if (t === '-') { state.cwd = ['~']; return null; }
+    const r = resolvePath(t);
+    if (!r.node) return 'cd: ' + t + ': 没有那个目录';
+    if (r.node.type !== 'dir') return 'cd: ' + t + ': 不是目录';
+    // 计算新的绝对路径
+    if (t.startsWith('/') || t.startsWith('~')) {
+      state.cwd = ['~'].concat(t.replace(/^~?\/?/, '').split('/').filter(Boolean));
+    } else {
+      state.cwd = state.cwd.concat(t.split('/').filter(Boolean));
+    }
+    return null;
+  };
+
+  commands['mkdir'] = (args) => {
+    const n = args[0];
+    if (!n) return 'mkdir: 缺少操作数';
+    const cur = cwdNode();
+    if (cur.children[n]) return 'mkdir: 无法创建目录 "' + n + '": 已存在';
+    cur.children[n] = { type: 'dir', children: {} };
+    return null;
+  };
+
+  commands['touch'] = (args) => {
+    const n = args[0];
+    if (!n) return 'touch: 缺少操作数';
+    const cur = cwdNode();
+    if (!cur.children[n]) cur.children[n] = { type: 'file', content: '' };
+    return null;
+  };
+
+  function print(text, cls) {
+    const div = document.createElement('div');
+    div.className = 'line' + (cls ? ' ' + cls : '');
+    div.textContent = text;
+    output.appendChild(div);
+  }
+
+  // 主页崩坏：所有板块碎裂、错位、掉色
+  function crashPage() {
+    const secs = document.querySelectorAll('.section, .hero, .nav, .footer');
+    secs.forEach((s, i) => {
+      s.style.transition = 'transform .8s ease-in, opacity .8s, filter .8s';
+      const dx = (Math.random() - 0.5) * 200;
+      const dy = 60 + Math.random() * 200;
+      const rot = (Math.random() - 0.5) * 30;
+      s.style.transform = 'translate(' + dx + 'px,' + dy + 'px) rotate(' + rot + 'deg)';
+      s.style.opacity = '0.08';
+      s.style.filter = 'grayscale(1) blur(2px)';
+    });
+    document.body.style.background = '#000';
+  }
+
+  // 恢复主页
+  function restorePage() {
+    const secs = document.querySelectorAll('.section, .hero, .nav, .footer');
+    secs.forEach((s) => {
+      s.style.transform = '';
+      s.style.opacity = '';
+      s.style.filter = '';
+    });
+    document.body.style.background = '';
+    // 恢复被 rm 隐藏的板块
+    document.querySelectorAll('.section.erased').forEach((s) => s.classList.remove('erased'));
+  }
+
+  // 假删库 → 清屏 → EFI network 超时
+  function runWipe() {
+    const files = [
+      '/bin', '/boot', '/dev', '/etc', '/home', '/lib', '/opt',
+      '/proc', '/root', '/sbin', '/srv', '/sys', '/tmp', '/usr', '/var',
+      'C:\\Windows\\System32', 'csrss.exe', 'svchost.exe', 'ntoskrnl.exe'
+    ];
+    let i = 0;
+    const timer = setInterval(() => {
+      if (i < files.length) {
+        print('rm: removing ' + files[i] + ' ... done', 'err');
+        scrollBottom();
+        i++;
+      } else {
+        clearInterval(timer);
+        print('rm: cannot remove the last one: 系统已放弃治疗', 'err');
+        scrollBottom();
+        // 主页崩坏（视觉清空）
+        crashPage();
+        // 进入关机黑屏
+        setTimeout(startEfiScreen, 900);
+      }
+    }, 120);
+  }
+
+  function startEfiScreen() {
+    // 全屏黑屏覆盖
+    let screen = document.getElementById('efi-screen');
+    if (!screen) {
+      screen = document.createElement('div');
+      screen.id = 'efi-screen';
+      screen.className = 'efi-screen';
+      document.body.appendChild(screen);
+    }
+    screen.innerHTML = '';
+    screen.classList.add('show');
+
+    const pre = document.createElement('pre');
+    pre.className = 'efi-text';
+    screen.appendChild(pre);
+
+    // EFI 画面：先显示 efi network....，等 2 秒后显示 time out，再显示闪烁光标
+    const line1 = 'efi network....';
+    const line2 = 'time out';
+    let text = '';
+    let li = 0, ci = 0;
+
+    function typeNext() {
+      const cur = li === 0 ? line1 : line2;
+      if (ci < cur.length) {
+        text += cur[ci];
+        pre.textContent = text;
+        ci++;
+        setTimeout(typeNext, 60);
+      } else {
+        if (li === 0) {
+          // 第一行打完，等 2 秒
+          text += '\n';
+          li++; ci = 0;
+          setTimeout(typeNext, 2000);
+        } else {
+          // 两行打完，加上闪烁光标行
+          const caret = document.createElement('div');
+          caret.className = 'efi-caret';
+          caret.textContent = '_';
+          screen.appendChild(caret);
+
+          const hint = document.createElement('div');
+          hint.className = 'efi-hint';
+          hint.textContent = '[ 点击任意处重启 ]';
+          screen.appendChild(hint);
+
+          screen.addEventListener('click', () => {
+            screen.classList.remove('show');
+            screen.innerHTML = '';
+            output.innerHTML = '';
+            restorePage();
+            // 重置文件系统
+            state.cwd = ['~'];
+            updatePrompt();
+            print('SYSTEM-WIN11-T-I interactive shell v1.0', 'info');
+            print('系统已恢复（刚才是假的啦 😜）', 'info');
+            scrollBottom();
+          }, { once: true });
+        }
+      }
+    }
+    typeNext();
+  }
+
+  function printEcho(cmd) {
+    const div = document.createElement('div');
+    div.className = 'line echo';
+    div.innerHTML = '<span class="cmd-ps1">guest@SYSTEM-WIN11-T-I:' + cwdName() + '$</span> ' + escapeHtml(cmd);
+    output.appendChild(div);
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function scrollBottom() { body.scrollTop = body.scrollHeight; }
+
+  // 更新输入行提示符
+  function updatePrompt() {
+    const el = document.getElementById('console-ps1');
+    if (el) el.textContent = 'guest@SYSTEM-WIN11-T-I:' + cwdName() + '$';
+  }
+
+  // ===== 假 vim 编辑器 =====
+  function openVim(fname) {
+    // 找到/创建文件
+    const t = resolvePath(fname);
+    let content;
+    if (t.node && t.node.type === 'file') content = t.node.content;
+    else { content = ''; if (t.parent) t.parent.children[t.name] = { type: 'file', content: '' }; }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'vim-overlay';
+    overlay.innerHTML =
+      '<div class="vim-title">VIM — ' + escapeHtml(fname) + '</div>' +
+      '<textarea class="vim-editor" spellcheck="false"></textarea>' +
+      '<div class="vim-status"><span class="vim-mode">-- INSERT --</span><span class="vim-cmd" style="display:none"></span></div>';
+    document.body.appendChild(overlay);
+
+    const ta = overlay.querySelector('.vim-editor');
+    const modeEl = overlay.querySelector('.vim-mode');
+    const cmdEl = overlay.querySelector('.vim-cmd');
+    ta.value = content;
+    setTimeout(() => ta.focus(), 50);
+
+    let mode = 'insert';   // 'insert' | 'normal'
+    let cmdBuf = '';       // 命令模式缓冲区（如 ":wq"）
+
+    function setMode(m) {
+      mode = m;
+      if (m === 'insert') {
+        ta.readOnly = false;
+        modeEl.textContent = '-- INSERT --';
+        modeEl.style.display = '';
+        cmdEl.style.display = 'none';
+        cmdEl.textContent = '';
+      } else {
+        ta.readOnly = true;
+        modeEl.style.display = 'none';
+        cmdEl.style.display = '';
+        cmdEl.textContent = '';
+      }
+    }
+
+    function execCmd() {
+      const c = cmdBuf.trim();
+      if (c === ':wq' || c === ':w' || c === ':x') {
+        if (t.parent) t.parent.children[t.name] = { type: 'file', content: ta.value };
+        closeVim(overlay);
+        print('"' + fname + '" ' + (ta.value.split('\n').length) + 'L written', 'ok');
+        return true;
+      }
+      if (c === ':q!' || c === ':q') {
+        closeVim(overlay);
+        print('已放弃修改', 'info');
+        return true;
+      }
+      // 未知命令，回到 insert
+      return false;
+    }
+
+    ta.addEventListener('keydown', (e) => {
+      if (mode === 'insert') {
+        // INSERT 模式：Esc 进入 NORMAL
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          setMode('normal');
+        }
+      } else {
+        // NORMAL 模式：捕获命令输入
+        e.preventDefault();
+        if (e.key === 'Enter') {
+          const ok = execCmd();
+          if (!ok) { setMode('insert'); }
+          cmdBuf = '';
+          return;
+        }
+        if (e.key === 'Backspace') { cmdBuf = cmdBuf.slice(0, -1); }
+        else if (e.key === 'Escape') { cmdBuf = ''; setMode('insert'); }
+        else if (e.key.length === 1) { cmdBuf += e.key; }
+        cmdEl.textContent = cmdBuf || ':';
+      }
+    });
+
+    setMode('insert');
+  }
+
+  function closeVim(overlay) {
+    overlay.remove();
+    input.focus();
+    updatePrompt();
+  }
+
+  const history = [];
+  let histIdx = -1;
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const raw = input.value.trim();
+      input.value = '';
+      if (!raw) return;
+      printEcho(raw);
+      history.push(raw);
+      histIdx = history.length;
+      // 拦截 y/n 确认
+      if (state.awaitingConfirm === 'rm') {
+        state.awaitingConfirm = null;
+        const ans = raw.toLowerCase();
+        if (ans === 'y' || ans === 'yes') {
+          runWipe();
+        } else {
+          print('操作已取消。', 'info');
+        }
+        scrollBottom();
+        return;
+      }
+
+      const parts = raw.split(/\s+/);
+      const cmd = parts[0].toLowerCase();
+      const args = parts.slice(1);
+      if (commands[cmd]) {
+        const res = commands[cmd](args);
+        if (res) print(res, cmd === 'sudo' ? 'err' : 'ok');
+      } else {
+        print("command not found: " + cmd + "  （输入 help 查看命令）", 'err');
+      }
+      updatePrompt();
+      scrollBottom();
+    } else if (e.key === 'ArrowUp') {
+      if (histIdx > 0) { histIdx--; input.value = history[histIdx]; }
+      e.preventDefault();
+    } else if (e.key === 'ArrowDown') {
+      if (histIdx < history.length - 1) { histIdx++; input.value = history[histIdx]; }
+      else { histIdx = history.length; input.value = ''; }
+      e.preventDefault();
+    }
+  });
+
+  // 点击终端区域聚焦输入
+  body.addEventListener('click', () => input.focus());
+})();
+
+
+/* ===== 神秘解锁（AES-256-GCM） ===== */
+(function secretUnlock() {
+  // 预生成的 AES-256-GCM 密文（PBKDF2-SHA256, 100000 轮）
+  const ENC = {
+    salt: "s6zbjEuC3KHih+t+lCY+tw==",
+    iv: "jngYyxV7w+qNKXxn",
+    tag: "ywQbtEipKx9You0EKp8h9w==",
+    ciphertext: "Dud1ZmZVsrVIIHHts7ak5Tg3gbYyN1oFeeWwpZpJI/o5DHanOi3ock8vhfULzZWGeMf2g6mkOV8BoRMUwa5+x+bWG1XhDByHWd0yC9eSABb0zvEmZQZ7zpJoXE9PVsU2oO8DnvYWaz3WN3WF45WjnImX0mJkTu0xYFD64g=="
+  };
+
+  function b64ToBuf(b64) {
+    const bin = atob(b64);
+    const buf = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+    return buf;
+  }
+
+  async function decrypt(password) {
+    const enc = new TextEncoder();
+    const salt = b64ToBuf(ENC.salt);
+    const iv = b64ToBuf(ENC.iv);
+    const data = b64ToBuf(ENC.ciphertext);
+    const tag = b64ToBuf(ENC.tag);
+
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+    );
+    const key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+    // Web Crypto 的 AES-GCM 要求 tag 拼在密文末尾
+    const combined = new Uint8Array(data.length + tag.length);
+    combined.set(data, 0);
+    combined.set(tag, data.length);
+
+    const plainBuf = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv }, key, combined
+    );
+    return new TextDecoder().decode(plainBuf);
+  }
+
+  const modal = document.getElementById('secret-modal');
+  const openBtn = document.getElementById('secret-toggle');
+  const closeBtn = document.getElementById('secret-close');
+  const backdrop = modal.querySelector('.secret-backdrop');
+  const form = document.getElementById('secret-form');
+  const input = document.getElementById('secret-input');
+  const submit = document.getElementById('secret-submit');
+  const msg = document.getElementById('secret-msg');
+  const content = document.getElementById('secret-content');
+  const stage = modal.querySelector('.lock-stage');
+  const particles = document.getElementById('lock-particles');
+
+  let unlocked = false;
+
+  function openModal() {
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    setTimeout(() => input.focus(), 350);
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  openBtn.addEventListener('click', openModal);
+  closeBtn.addEventListener('click', closeModal);
+  backdrop.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+
+  // ===== 科乐美秘技彩蛋：↑↑↓↓←→←→BA =====
+  function konamiEasterEgg() {
+    // 顶部提示
+    const toast = document.createElement('div');
+    toast.className = 'konami-toast';
+    toast.textContent = '↑↑↓↓←→←→BA  +30 LIVES';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 30);
+
+    // 全屏飘落 30 条命
+    const lives = document.createElement('div');
+    lives.className = 'konami-lives';
+    document.body.appendChild(lives);
+    for (let i = 0; i < 30; i++) {
+      const span = document.createElement('span');
+      span.className = 'konami-life';
+      span.textContent = '♥';
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.animationDelay = (Math.random() * 1.5) + 's';
+      span.style.animationDuration = (2.5 + Math.random() * 2.5) + 's';
+      span.style.fontSize = (18 + Math.random() * 22) + 'px';
+      lives.appendChild(span);
+    }
+
+    // 清理
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+    setTimeout(() => lives.remove(), 6000);
+  }
+
+  const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let konamiIdx = 0;
+  document.addEventListener('keydown', (e) => {
+    // 在输入框/编辑器里打字时不触发
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return;
+
+    const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === KONAMI[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === KONAMI.length) {
+        konamiIdx = 0;
+        konamiEasterEgg();
+      }
+    } else {
+      konamiIdx = (key === KONAMI[0]) ? 1 : 0;
+    }
+  });
+
+  // ===== 真实代码 token =====
+  const CODE_TOKENS = [
+    '#include', 'iostream', 'using', 'namespace', 'std', 'int', 'main', 'return',
+    'var', 'let', 'const', 'function', '=>', 'if', 'else', 'for', 'while',
+    'class', 'new', 'this', 'null', 'true', 'false',
+    '//', '/*', '*/', '#', '*', '&&', '||', '==', '!=', '++', '--',
+    '{}', '()', '[]', '<>', ';', '::', '->',
+    '0x1F', '0b1010', 'NULL', 'void', 'struct', 'public', 'static'
+  ];
+
+  // ===== 极简 2D 刚体物理引擎 =====
+  const Physics = (function () {
+    const GRAVITY = 0.9, AIR = 0.994, REST = 0.33, FRICTION = 0.84;
+    const bodies = [];
+    let W = 0, H = 0, rafId = null, running = false, hostEl = null;
+
+    function init(container) {
+      hostEl = container;
+      resize();
+      window.addEventListener('resize', resize);
+    }
+    function resize() { W = window.innerWidth; H = window.innerHeight; }
+
+    function add(el, x, y, vx, vy) {
+      const w = el.offsetWidth || 40, h = el.offsetHeight || 24;
+      const b = { el, w, h, x: x - w / 2, y: y - h / 2, vx: vx || 0, vy: vy || 0, angle: 0, va: (Math.random() - 0.5) * 0.3, dragging: false };
+      bodies.push(b);
+      render(b);
+      return b;
+    }
+    function render(b) {
+      b.el.style.transform = 'translate(' + b.x + 'px,' + b.y + 'px) rotate(' + b.angle + 'rad)';
+    }
+
+    function step() {
+      for (let i = 0; i < bodies.length; i++) {
+        const b = bodies[i];
+        if (b.dragging) continue;
+        b.vy += GRAVITY;
+        b.vx *= AIR; b.vy *= AIR; b.va *= 0.98;
+        b.x += b.vx; b.y += b.vy; b.angle += b.va;
+        if (b.y + b.h > H) {
+          b.y = H - b.h;
+          b.vy = Math.abs(b.vy) > 0.5 ? -b.vy * REST : 0;
+          b.vx *= FRICTION; b.va *= 0.8;
+        }
+        if (b.y < 0) { b.y = 0; b.vy = -b.vy * REST; }
+        if (b.x < 0) { b.x = 0; b.vx = -b.vx * REST; }
+        if (b.x + b.w > W) { b.x = W - b.w; b.vx = -b.vx * REST; }
+      }
+      for (let iter = 0; iter < 2; iter++) {
+        for (let i = 0; i < bodies.length; i++) {
+          for (let j = i + 1; j < bodies.length; j++) resolve(bodies[i], bodies[j]);
+        }
+      }
+      for (let i = 0; i < bodies.length; i++) render(bodies[i]);
+      rafId = requestAnimationFrame(step);
+    }
+
+    function resolve(a, b) {
+      if (a.dragging && b.dragging) return;
+      const ox = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
+      const oy = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+      if (ox <= 0 || oy <= 0) return;
+      if (ox < oy) {
+        const dir = (a.x + a.w / 2) < (b.x + b.w / 2) ? -1 : 1;
+        const push = ox / 2;
+        if (!a.dragging) { a.x += dir * push; a.vx += dir * 0.5; }
+        if (!b.dragging) { b.x -= dir * push; b.vx -= dir * 0.5; }
+      } else {
+        const dir = (a.y + a.h / 2) < (b.y + b.h / 2) ? -1 : 1;
+        const push = oy / 2;
+        if (!a.dragging) { a.y += dir * push; a.vy += dir * 0.3; }
+        if (!b.dragging) { b.y -= dir * push; b.vy -= dir * 0.3; }
+      }
+    }
+
+    function start() { if (running) return; running = true; rafId = requestAnimationFrame(step); }
+    function stop() { running = false; if (rafId) cancelAnimationFrame(rafId); }
+    return { init, add, start, stop, bodies };
+  })();
+
+  // ===== 碎裂成真实代码 token，落地后可玩 =====
+  let physReady = false;
+  let lockCenter = null;
+
+  // 把任意一个碎片拖回锁中心附近 → 所有碎片飞回并重组为锁
+  function relockAll() {
+    if (!lockCenter) return;
+    const stageEl = document.getElementById('phys-stage');
+    if (!stageEl) return;
+    const { x: cx, y: cy } = lockCenter;
+
+    // 每个碎片朝中心飞回
+    Physics.bodies.forEach((b, i) => {
+      b.dragging = false;
+      const targetX = cx - b.w / 2 + (Math.random() - 0.5) * 10;
+      const targetY = cy - b.h / 2 + (Math.random() - 0.5) * 10;
+      const dx = targetX - b.x, dy = targetY - b.y;
+
+      // 临时禁用物理，用 CSS 过渡飞回
+      b.el.style.transition = 'transform .5s cubic-bezier(.5,-0.3,.6,1.3), opacity .5s';
+      b.el.style.transform = 'translate(' + targetX + 'px,' + targetY + 'px) scale(.3)';
+      b.el.style.opacity = '0';
+    });
+
+    // 动画结束后清理
+    setTimeout(() => {
+      Physics.stop();
+      Physics.bodies.length = 0;
+      stageEl.innerHTML = '';
+      stageEl.remove();
+
+      // 恢复锁 + 输入框
+      const lockSvg = modal.querySelector('.lock-svg');
+      lockSvg.style.visibility = '';
+      stage.classList.remove('cracking');
+      const formEl = document.getElementById('secret-form');
+      formEl.style.display = '';
+      const inputEl = document.getElementById('secret-input');
+      inputEl.value = '';
+      const msgEl = document.getElementById('secret-msg');
+      msgEl.textContent = '';
+      msgEl.className = 'secret-msg';
+      // 收起隐藏内容
+      const contentEl = document.getElementById('secret-content');
+      contentEl.classList.remove('show');
+      // 复位解锁状态
+      unlocked = false;
+      lockCenter = null;
+    }, 550);
+  }
+
+  function shatterToPhysics() {
+    // 创建全屏物理舞台
+    let stageEl = document.getElementById('phys-stage');
+    if (!stageEl) {
+      stageEl = document.createElement('div');
+      stageEl.id = 'phys-stage';
+      stageEl.className = 'phys-stage';
+      document.body.appendChild(stageEl);
+      Physics.init(stageEl);
+      physReady = true;
+    }
+
+    // 锁的中心（视口坐标）—— 记录，供"拖回重组"判定
+    const rect = modal.querySelector('.lock-svg').getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    lockCenter = { x: cx, y: cy };
+
+    const colors = ['', 'green', 'cyan', 'purple'];
+    const COUNT = 46;
+    for (let i = 0; i < COUNT; i++) {
+      const el = document.createElement('span');
+      el.className = 'phys-token ' + colors[i % colors.length];
+      el.textContent = CODE_TOKENS[Math.floor(Math.random() * CODE_TOKENS.length)];
+      el.style.fontSize = (13 + Math.random() * 5) + 'px';
+      stageEl.appendChild(el);
+
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 3 + Math.random() * 9;
+      const vx = Math.cos(angle) * speed;
+      const vy = Math.sin(angle) * speed - 1.5;
+      Physics.add(el, cx + (Math.random() - 0.5) * 40, cy + (Math.random() - 0.5) * 40, vx, vy);
+      makeDraggable(el);
+    }
+    Physics.start();
+  }
+
+  // 鼠标/触摸拖拽 + 甩出
+  function makeDraggable(el) {
+    let dragging = false, offX = 0, offY = 0, lastX = 0, lastY = 0, lastT = 0;
+    const body = () => Physics.bodies.find((b) => b.el === el);
+
+    function down(e) {
+      e.preventDefault();
+      const pt = point(e);
+      const b = body();
+      if (!b) return;
+      dragging = true; b.dragging = true;
+      offX = pt.x - b.x; offY = pt.y - b.y;
+      lastX = pt.x; lastY = pt.y; lastT = performance.now();
+      b.vx = 0; b.vy = 0;
+      el.classList.add('dragging');
+      document.addEventListener('mousemove', move);
+      document.addEventListener('mouseup', up);
+      document.addEventListener('touchmove', move, { passive: false });
+      document.addEventListener('touchend', up);
+    }
+    function move(e) {
+      if (!dragging) return;
+      e.preventDefault();
+      const pt = point(e);
+      const b = body();
+      if (!b) return;
+      const now = performance.now();
+      const dt = Math.max(1, now - lastT);
+      b.vx = (pt.x - lastX) / dt * 14;
+      b.vy = (pt.y - lastY) / dt * 14;
+      lastX = pt.x; lastY = pt.y; lastT = now;
+      b.x = pt.x - offX; b.y = pt.y - offY;
+    }
+    function up() {
+      if (!dragging) return;
+      dragging = false;
+      const b = body();
+      if (b) b.dragging = false;
+      el.classList
