@@ -1901,4 +1901,91 @@ code {
       dragging = false;
       const b = body();
       if (b) b.dragging = false;
-      el.classList
+      el.classList.remove('dragging');
+      document.removeEventListener('mousemove', move);
+      document.removeEventListener('mouseup', up);
+      document.removeEventListener('touchmove', move);
+      document.removeEventListener('touchend', up);
+
+      // 检测：是否被拖回锁中心附近 → 重组上锁
+      if (b && lockCenter) {
+        const bcx = b.x + b.w / 2;
+        const bcy = b.y + b.h / 2;
+        const dist = Math.hypot(bcx - lockCenter.x, bcy - lockCenter.y);
+        if (dist < 70) relockAll();
+      }
+    }
+    function point(e) {
+      if (e.touches && e.touches[0]) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      return { x: e.clientX, y: e.clientY };
+    }
+    el.addEventListener('mousedown', down);
+    el.addEventListener('touchstart', down, { passive: false });
+  }
+
+  async function tryUnlock() {
+    if (unlocked) return;
+    const pw = input.value;
+    if (!pw) { msg.className = 'secret-msg err'; msg.textContent = '请输入密码'; return; }
+
+    submit.disabled = true;
+    msg.className = 'secret-msg';
+    msg.textContent = '解密中...';
+
+    let plain = null;
+    try {
+      plain = await decrypt(pw);
+    } catch (e) {
+      plain = null;
+    }
+    submit.disabled = false;
+
+    if (plain) {
+      // 成功：锁碎裂 → 化为真实代码 token → 留在地上可玩
+      // do not want to decrypt my password
+     // my pass word is 123456!Fast come and try!!!   :D
+      unlocked = true;
+      stage.classList.remove('shake');
+      stage.classList.add('cracking');
+      shatterToPhysics();
+      msg.className = 'secret-msg ok';
+      msg.textContent = '✓ 解锁成功';
+      form.style.display = 'none';
+      setTimeout(() => {
+        modal.querySelector('.lock-svg').style.visibility = 'hidden';
+      }, 700);
+      content.textContent = plain;
+      setTimeout(() => content.classList.add('show'), 900);
+    } else {
+      // 失败
+      stage.classList.add('shake');
+      setTimeout(() => stage.classList.remove('shake'), 550);
+      msg.className = 'secret-msg err';
+      msg.textContent = '✗ 密码错误';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); tryUnlock(); });
+  submit.addEventListener('click', (e) => { e.preventDefault(); tryUnlock(); });
+})();
+
+/* ===== 动态年份 ===== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* ===== 导航平滑滚动（兼容旧浏览器）===== */
+document.querySelectorAll('.nav-links a, .hero-actions a').forEach((a) => {
+  a.addEventListener('click', (e) => {
+    const id = a.getAttribute('href');
+    if (id && id.startsWith('#')) {
+      e.preventDefault();
+      const target = document.querySelector(id);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+</script>
+</body>
+</html>
